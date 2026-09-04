@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+  <defs><linearGradient id="p" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#fff8fb"/><stop offset="1" stop-color="#edbdd1"/></linearGradient></defs>
+  <rect width="1200" height="750" fill="url(#p)"/><rect x="180" y="115" width="840" height="520" rx="26" fill="white" opacity=".72"/><circle cx="250" cy="180" r="12" fill="#bd668d"/><circle cx="290" cy="180" r="12" fill="#edbdd1"/><rect x="255" y="270" width="410" height="36" rx="18" fill="#edbdd1"/><rect x="255" y="335" width="620" height="20" rx="10" fill="#f7dce8"/><rect x="255" y="380" width="530" height="20" rx="10" fill="#f7dce8"/><text x="600" y="560" text-anchor="middle" font-family="Arial" font-size="26" fill="#7f3f5d">PROJECT IMAGE PLACEHOLDER</text>
+</svg>
