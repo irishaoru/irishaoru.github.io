@@ -102,8 +102,8 @@ if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').mat
       const rect = card.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width;
       const y = (event.clientY - rect.top) / rect.height;
-      card.style.setProperty('--tilt-x', `${(0.5 - y) * 7}deg`);
-      card.style.setProperty('--tilt-y', `${(x - 0.5) * 7}deg`);
+      card.style.setProperty('--tilt-x', `${(0.5 - y) * 11}deg`);
+      card.style.setProperty('--tilt-y', `${(x - 0.5) * 11}deg`);
       card.style.setProperty('--shine-x', `${x * 100}%`);
       card.style.setProperty('--shine-y', `${y * 100}%`);
     });
