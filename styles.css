@@ -136,6 +136,12 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .technical-card { display: grid; grid-template-columns: minmax(250px, .72fr) 1.28fr; }
 .technical-card .project-image { aspect-ratio: 4 / 3; }
 .technical-card .tag-list { margin-block: 8px 22px; }
+.awards-grid { display: grid; gap: 16px; }
+.award-card { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 22px; padding: 24px 28px; border: 1px solid rgba(255,255,255,.92); border-radius: 20px 7px 20px 7px; background: linear-gradient(135deg, rgba(255,255,255,.84), rgba(252,238,244,.58)); box-shadow: inset 1px 1px 0 #fff, 0 15px 35px rgba(87,44,65,.09); }
+.award-icon { display: grid; place-items: center; width: 58px; height: 58px; border: 1px solid var(--rose-200); border-radius: 50%; background: rgba(255,255,255,.8); color: var(--rose-500); font-size: 1.55rem; box-shadow: 0 8px 18px rgba(127,63,93,.1); }
+.award-icon.gold { color: #b68a35; background: linear-gradient(145deg, #fffdf4, #f8e9bd); }
+.award-meta { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 7px; color: var(--rose-500); font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.award-copy h3 { margin: 0; font-size: clamp(1.35rem, 3vw, 1.9rem); }
 .project-preview-card { min-height: 360px; }
 .project-open { display: grid; grid-template-rows: 230px 1fr; width: 100%; height: 100%; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; font: inherit; }
 .project-preview-image, .project-art { display: block; position: relative; overflow: hidden; margin: 7px; border: 1px solid rgba(255,255,255,.8); border-radius: 18px 5px 15px 5px; }
@@ -198,6 +204,8 @@ footer { border-top: 1px solid var(--rose-200); padding: 28px 0; color: var(--mu
   .technical-card .project-image { aspect-ratio: 16 / 10; }
   .achievement-grid { grid-template-columns: 1fr; }
   .project-open { grid-template-rows: 200px 1fr; }
+  .award-card { grid-template-columns: 1fr; }
+  .award-meta { align-items: flex-start; flex-direction: column; gap: 3px; }
   .hero { text-align: center; padding-top: 55px; }
   .hero-copy { order: 2; }.portrait-wrap { max-width: 310px; }.actions { justify-content: center; }
 }
