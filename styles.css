@@ -70,7 +70,7 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .button.secondary:hover { background: var(--rose-100); }
 
 .portrait-wrap { position: relative; max-width: 430px; margin-inline: auto; }
-.portrait { aspect-ratio: 4 / 5; width: 100%; object-fit: cover; border-radius: 48% 48% 18px 18px; border: 12px solid rgba(255,255,255,.7); box-shadow: var(--shadow); background: var(--rose-200); }
+.portrait { aspect-ratio: 4 / 5; width: 100%; object-fit: cover; object-position: 50% 42%; border-radius: 48% 48% 18px 18px; border: 12px solid rgba(255,255,255,.7); box-shadow: var(--shadow); background: var(--rose-200); }
 .orbit { position: absolute; inset: -24px; border: 1px solid var(--rose-300); border-radius: 50%; animation: orbit 16s linear infinite; pointer-events: none; }
 .orbit::before, .orbit::after { content: "✦"; position: absolute; color: var(--rose-500); background: var(--rose-50); padding: 5px; }
 .orbit::before { top: 12%; left: 3%; }.orbit::after { bottom: 10%; right: 3%; }
