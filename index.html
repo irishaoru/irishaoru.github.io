@@ -2,23 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Portfolio of Your Name — designer, developer, and creative thinker.">
+  <meta name="description" content="Portfolio of Your Name — projects, technical work, interests, and contact information.">
   <title>Your Name | Portfolio</title><link rel="stylesheet" href="styles.css"><script src="script.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header"><nav class="nav container" aria-label="Main navigation">
-    <a class="brand" href="index.html"><span class="brand-mark">✦</span> Your Name</a>
+    <a class="brand" href="#home"><span class="brand-mark">✦</span> Your Name</a>
     <button class="fairy-toggle" type="button" aria-pressed="false">✦ Fairy dust: off</button>
     <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
-    <ul class="nav-links"><li><a class="active" aria-current="page" href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="projects.html">Projects</a></li><li><a href="contact.html">Contact</a></li></ul>
+    <ul class="nav-links"><li><a class="active" href="#home">Home</a></li><li><a href="#about">About</a></li><li><a href="#projects">Projects</a></li><li><a href="#technical-projects">Technical</a></li><li><a href="#interests">Interests</a></li><li><a href="#contact">Contact</a></li></ul>
   </nav></header>
-  <main id="main"><section class="hero container">
-    <div class="hero-copy reveal"><p class="eyebrow">Hello, I’m</p><h1>Your <span class="accent">Name.</span></h1>
-      <p class="lead">[Write a warm, one- or two-sentence introduction about what you do, what you care about, and the kind of work you create.]</p>
-      <div class="actions"><a class="button" href="projects.html">Explore my work</a><a class="button secondary" href="contact.html">Let’s connect</a></div>
-    </div>
-    <div class="portrait-wrap reveal"><div class="orbit" aria-hidden="true"></div><img class="portrait" src="portrait-placeholder.svg" alt="Placeholder portrait — replace with a photo of Your Name"></div>
-  </section></main>
+  <main id="main">
+    <section id="home" class="hero container scroll-section">
+      <div class="hero-copy reveal"><p class="eyebrow">Hello, I’m</p><h1>Your <span class="accent">Name.</span></h1><p class="lead">[Write a warm, one- or two-sentence introduction about what you do, what you care about, and the kind of work you create.]</p><div class="actions"><a class="button" href="#projects">Explore my work</a><a class="button secondary" href="#contact">Let’s connect</a></div></div>
+      <div class="portrait-wrap reveal"><div class="orbit" aria-hidden="true"></div><img class="portrait" src="portrait-placeholder.svg" alt="Placeholder portrait — replace with a photo of Your Name"></div>
+    </section>
+    <section id="about" class="section scroll-section section-tint"><div class="container">
+      <header class="section-heading reveal"><p class="eyebrow">A little more</p><h2>About <span class="accent">me.</span></h2><p class="lead">[Add a short personal statement that introduces your perspective, values, or journey.]</p></header>
+      <div class="grid-2"><article class="card reveal"><h3>My story</h3><p>[Share more detail about who you are, your education or professional path, and what led you to your current work.]</p><p>[Add another paragraph about the problems you enjoy solving or the impact you hope to make.]</p></article><article class="card reveal"><h3>Skills & tools</h3><p>[Describe your strongest areas and the kind of work you enjoy doing.]</p><ul class="tag-list"><li class="tag">[Skill One]</li><li class="tag">[Skill Two]</li><li class="tag">[Skill Three]</li><li class="tag">[Tool One]</li><li class="tag">[Tool Two]</li></ul></article></div>
+    </div></section>
+    <section id="projects" class="section scroll-section"><div class="container">
+      <header class="section-heading reveal"><p class="eyebrow">Creative & professional work</p><h2>Projects</h2><p class="lead">[Introduce your creative, academic, professional, or community-based projects.]</p></header>
+      <div class="grid-3">
+        <article class="card project-card reveal"><img class="project-image" src="project-placeholder.svg" alt="Placeholder preview for Project One"><div class="project-copy"><p class="eyebrow">[Category · Year]</p><h3>[Project One]</h3><p>[A brief summary of the project, your role, and its outcome.]</p><a class="text-link" href="#">View project →</a></div></article>
+        <article class="card project-card reveal"><img class="project-image" src="project-placeholder.svg" alt="Placeholder preview for Project Two"><div class="project-copy"><p class="eyebrow">[Category · Year]</p><h3>[Project Two]</h3><p>[A brief summary of the project, your role, and its outcome.]</p><a class="text-link" href="#">View project →</a></div></article>
+        <article class="card project-card reveal"><img class="project-image" src="project-placeholder.svg" alt="Placeholder preview for Project Three"><div class="project-copy"><p class="eyebrow">[Category · Year]</p><h3>[Project Three]</h3><p>[A brief summary of the project, your role, and its outcome.]</p><a class="text-link" href="#">View project →</a></div></article>
+      </div>
+    </div></section>
+    <section id="technical-projects" class="section scroll-section section-tint"><div class="container">
+      <header class="section-heading reveal"><p class="eyebrow">Code, systems & problem-solving</p><h2>Technical Projects</h2><p class="lead">[Introduce your coding, data, engineering, research, or other technical work.]</p></header>
+      <div class="grid-2">
+        <article class="card project-card reveal"><img class="project-image" src="project-placeholder.svg" alt="Placeholder preview for Technical Project One"><div class="project-copy"><p class="eyebrow">[Technology · Year]</p><h3>[Technical Project One]</h3><p>[Explain the problem, your technical approach, and the result.]</p><ul class="tag-list"><li class="tag">[Language]</li><li class="tag">[Framework]</li><li class="tag">[Tool]</li></ul><a class="text-link" href="#">Code or demo →</a></div></article>
+        <article class="card project-card reveal"><img class="project-image" src="project-placeholder.svg" alt="Placeholder preview for Technical Project Two"><div class="project-copy"><p class="eyebrow">[Technology · Year]</p><h3>[Technical Project Two]</h3><p>[Explain the problem, your technical approach, and the result.]</p><ul class="tag-list"><li class="tag">[Language]</li><li class="tag">[Framework]</li><li class="tag">[Tool]</li></ul><a class="text-link" href="#">Code or demo →</a></div></article>
+      </div>
+    </div></section>
+    <section id="interests" class="section scroll-section"><div class="container">
+      <header class="section-heading reveal"><p class="eyebrow">Outside the office</p><h2>Hobbies & <span class="accent">Interests.</span></h2><p class="lead">[Add a line about what inspires, energizes, or delights you beyond your professional work.]</p></header>
+      <div class="grid-3 interest-grid"><article class="card interest-card reveal"><span class="interest-icon" aria-hidden="true">♡</span><h3>[Interest One]</h3><p>[Share a few details about this hobby and why it matters to you.]</p></article><article class="card interest-card reveal"><span class="interest-icon" aria-hidden="true">✧</span><h3>[Interest Two]</h3><p>[Share a few details about this hobby and why it matters to you.]</p></article><article class="card interest-card reveal"><span class="interest-icon" aria-hidden="true">❀</span><h3>[Interest Three]</h3><p>[Share a few details about this hobby and why it matters to you.]</p></article></div>
+    </div></section>
+    <section id="contact" class="section scroll-section section-tint"><div class="container">
+      <header class="section-heading reveal"><p class="eyebrow">Say hello</p><h2>Let’s make something <span class="accent">lovely.</span></h2><p class="lead">[Add a friendly note about the opportunities, collaborations, or conversations you’re open to.]</p></header>
+      <div class="contact-layout"><article class="card reveal"><h3>Find me</h3><p>[Your City, State/Country]</p><ul class="contact-list"><li><strong>Email:</strong> <a href="mailto:hello@example.com">hello@example.com</a></li><li><strong>LinkedIn:</strong> <a href="#">[LinkedIn URL]</a></li><li><strong>GitHub:</strong> <a href="#">[GitHub URL]</a></li><li><strong>Other:</strong> <a href="#">[Additional link]</a></li></ul></article><article class="card reveal"><h3>Send a note</h3><form class="contact-form"><label for="name">Your name<input id="name" name="name" type="text" placeholder="[Your name]" required></label><label for="email">Your email<input id="email" name="email" type="email" placeholder="[you@example.com]" required></label><label for="message">Message<textarea id="message" name="message" placeholder="[Tell me a little about your idea...]" required></textarea></label><button class="button" type="submit">Send message ✦</button><p class="form-note" aria-live="polite">Placeholder form — connect it to a form service or backend before publishing.</p></form></article></div>
+    </div></section>
+  </main>
   <footer><div class="container">© <span data-year></span> Your Name · Designed with a little bit of magic ✦</div></footer>
 </body></html>

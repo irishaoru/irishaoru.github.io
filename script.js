@@ -5,6 +5,27 @@ menuButton?.addEventListener('click', () => {
   menuButton.setAttribute('aria-expanded', String(open));
 });
 
+navLinks?.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    menuButton?.setAttribute('aria-expanded', 'false');
+  });
+});
+
+const pageSections = document.querySelectorAll('.scroll-section');
+const sectionLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+if ('IntersectionObserver' in window) {
+  const sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      sectionLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
+      });
+    });
+  }, { rootMargin: '-25% 0px -60% 0px' });
+  pageSections.forEach(section => sectionObserver.observe(section));
+}
+
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealItems = document.querySelectorAll('.reveal');
 if (reduceMotion) {
