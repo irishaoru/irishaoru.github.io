@@ -144,7 +144,7 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .project-art { display: grid; place-items: center; align-content: center; color: var(--rose-700); background: radial-gradient(circle at 25% 18%, rgba(255,255,255,.95), transparent 28%), linear-gradient(135deg, rgba(247,220,232,.9), rgba(237,228,255,.75), rgba(255,255,255,.88)); }
 .project-art::before, .project-art::after { content: ""; position: absolute; width: 105px; height: 105px; border: 1px solid rgba(255,255,255,.86); transform: rotate(45deg); }
 .project-art::before { top: -54px; right: 25px; }.project-art::after { bottom: -68px; left: 35px; }
-.project-art > span { font: italic 3.6rem var(--serif); letter-spacing: .08em; }
+.project-art img { position: relative; z-index: 1; width: min(88%, 520px); height: auto; }
 .project-art small { color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
 .depaul-art { background: radial-gradient(circle at 75% 20%, rgba(255,255,255,.95), transparent 28%), linear-gradient(145deg, rgba(239,229,255,.8), rgba(247,220,232,.86), rgba(255,255,255,.9)); }
 .project-preview-copy { display: grid; align-content: center; gap: 7px; padding: 22px 26px 26px; }
