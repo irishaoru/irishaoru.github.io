@@ -94,3 +94,24 @@ document.querySelector('.contact-form')?.addEventListener('submit', event => {
 });
 
 document.querySelectorAll('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
+
+// A subtle pointer-following tilt gives project cards depth on desktop.
+if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('pointermove', event => {
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = (event.clientY - rect.top) / rect.height;
+      card.style.setProperty('--tilt-x', `${(0.5 - y) * 7}deg`);
+      card.style.setProperty('--tilt-y', `${(x - 0.5) * 7}deg`);
+      card.style.setProperty('--shine-x', `${x * 100}%`);
+      card.style.setProperty('--shine-y', `${y * 100}%`);
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+      card.style.setProperty('--shine-x', '50%');
+      card.style.setProperty('--shine-y', '50%');
+    });
+  });
+}
