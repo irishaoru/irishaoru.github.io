@@ -28,7 +28,7 @@ if ('IntersectionObserver' in window) {
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealItems = document.querySelectorAll('.reveal');
-if (reduceMotion) {
+if (reduceMotion || !('IntersectionObserver' in window)) {
   revealItems.forEach(item => item.classList.add('visible'));
 } else {
   const observer = new IntersectionObserver(entries => {
@@ -57,13 +57,22 @@ function makeRevealDust(element) {
 }
 
 const fairyButton = document.querySelector('.fairy-toggle');
-let fairyOn = localStorage.getItem('fairyDust') === 'on';
+let fairyOn = false;
+try {
+  fairyOn = localStorage.getItem('fairyDust') === 'on';
+} catch (error) {
+  fairyOn = false;
+}
 let lastSparkle = 0;
 updateFairyButton();
 
 fairyButton?.addEventListener('click', () => {
   fairyOn = !fairyOn;
-  localStorage.setItem('fairyDust', fairyOn ? 'on' : 'off');
+  try {
+    localStorage.setItem('fairyDust', fairyOn ? 'on' : 'off');
+  } catch (error) {
+    // Some local file previews disable browser storage; the toggle still works.
+  }
   updateFairyButton();
 });
 
@@ -103,14 +112,29 @@ document.querySelectorAll('.project-open').forEach(button => {
     if (!projectModal || !modalContent || !details) return;
     lastProjectButton = button;
     modalContent.innerHTML = details.innerHTML;
-    projectModal.showModal();
+    if (typeof projectModal.showModal === 'function') {
+      projectModal.showModal();
+    } else {
+      projectModal.setAttribute('open', '');
+      projectModal.classList.add('modal-fallback-open');
+    }
     projectModal.querySelector('.modal-close')?.focus();
   });
 });
 
-projectModal?.querySelector('.modal-close')?.addEventListener('click', () => projectModal.close());
+function closeProjectModal() {
+  if (!projectModal) return;
+  if (typeof projectModal.close === 'function') projectModal.close();
+  else {
+    projectModal.removeAttribute('open');
+    projectModal.classList.remove('modal-fallback-open');
+    lastProjectButton?.focus();
+  }
+}
+
+projectModal?.querySelector('.modal-close')?.addEventListener('click', closeProjectModal);
 projectModal?.addEventListener('click', event => {
-  if (event.target === projectModal) projectModal.close();
+  if (event.target === projectModal) closeProjectModal();
 });
 projectModal?.addEventListener('close', () => lastProjectButton?.focus());
 
