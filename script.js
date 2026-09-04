@@ -93,6 +93,27 @@ document.querySelector('.contact-form')?.addEventListener('submit', event => {
   note.textContent = 'Form placeholder submitted — connect this form to your preferred email service before publishing.';
 });
 
+const projectModal = document.querySelector('.project-modal');
+const modalContent = projectModal?.querySelector('.modal-content');
+let lastProjectButton;
+
+document.querySelectorAll('.project-open').forEach(button => {
+  button.addEventListener('click', () => {
+    const details = button.closest('.project-card')?.querySelector('.project-details');
+    if (!projectModal || !modalContent || !details) return;
+    lastProjectButton = button;
+    modalContent.innerHTML = details.innerHTML;
+    projectModal.showModal();
+    projectModal.querySelector('.modal-close')?.focus();
+  });
+});
+
+projectModal?.querySelector('.modal-close')?.addEventListener('click', () => projectModal.close());
+projectModal?.addEventListener('click', event => {
+  if (event.target === projectModal) projectModal.close();
+});
+projectModal?.addEventListener('close', () => lastProjectButton?.focus());
+
 document.querySelectorAll('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 
 // A subtle pointer-following tilt gives project cards depth on desktop.

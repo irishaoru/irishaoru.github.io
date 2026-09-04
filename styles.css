@@ -136,6 +136,29 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .technical-card { display: grid; grid-template-columns: minmax(250px, .72fr) 1.28fr; }
 .technical-card .project-image { aspect-ratio: 4 / 3; }
 .technical-card .tag-list { margin-block: 8px 22px; }
+.project-preview-card { min-height: 360px; }
+.project-open { display: grid; grid-template-rows: 230px 1fr; width: 100%; height: 100%; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; font: inherit; }
+.project-preview-image, .project-art { display: block; position: relative; overflow: hidden; margin: 7px; border: 1px solid rgba(255,255,255,.8); border-radius: 18px 5px 15px 5px; }
+.project-preview-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .55s ease; }
+.project-open:hover .project-preview-image img { transform: scale(1.035); }
+.project-art { display: grid; place-items: center; align-content: center; color: var(--rose-700); background: radial-gradient(circle at 25% 18%, rgba(255,255,255,.95), transparent 28%), linear-gradient(135deg, rgba(247,220,232,.9), rgba(237,228,255,.75), rgba(255,255,255,.88)); }
+.project-art::before, .project-art::after { content: ""; position: absolute; width: 105px; height: 105px; border: 1px solid rgba(255,255,255,.86); transform: rotate(45deg); }
+.project-art::before { top: -54px; right: 25px; }.project-art::after { bottom: -68px; left: 35px; }
+.project-art > span { font: italic 3.6rem var(--serif); letter-spacing: .08em; }
+.project-art small { color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+.depaul-art { background: radial-gradient(circle at 75% 20%, rgba(255,255,255,.95), transparent 28%), linear-gradient(145deg, rgba(239,229,255,.8), rgba(247,220,232,.86), rgba(255,255,255,.9)); }
+.project-preview-copy { display: grid; align-content: center; gap: 7px; padding: 22px 26px 26px; }
+.project-preview-copy small { color: var(--rose-500); font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.project-preview-copy strong { color: var(--ink); font: 400 clamp(1.45rem, 2.5vw, 2rem) var(--serif); line-height: 1.08; }
+.project-preview-copy > span { margin-top: 4px; color: var(--rose-700); font-size: .8rem; font-weight: 800; }
+.project-details[hidden] { display: none; }
+.project-modal { width: min(680px, calc(100% - 32px)); max-height: min(84vh, 760px); padding: 0; overflow: auto; color: var(--ink); background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(252,238,244,.94)); border: 1px solid rgba(255,255,255,.95); border-radius: 28px 10px 28px 10px; box-shadow: 0 35px 100px rgba(57,43,51,.3), inset 0 0 30px rgba(255,255,255,.7); }
+.project-modal::backdrop { background: rgba(57,43,51,.42); backdrop-filter: blur(8px); }
+.modal-content { padding: clamp(32px, 6vw, 56px); }
+.modal-content h2 { margin: 14px 45px 24px 0; font-size: clamp(2.1rem, 5vw, 3.4rem); }
+.modal-content > p { color: var(--muted); }
+.modal-close { position: sticky; z-index: 4; top: 16px; float: right; width: 42px; height: 42px; margin: 16px 16px -58px 0; border: 1px solid var(--rose-200); border-radius: 50%; background: rgba(255,255,255,.9); color: var(--rose-700); cursor: pointer; font: 300 1.7rem/1 var(--sans); box-shadow: 0 6px 18px rgba(127,63,93,.12); }
+.modal-close:hover { background: var(--rose-100); }
 .interest-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
 .interest-card { display: grid; place-items: center; align-content: center; min-height: 180px; padding: 24px 14px; text-align: center; }
 .interest-card h3 { font-size: 1.2rem; }
@@ -173,6 +196,7 @@ footer { border-top: 1px solid var(--rose-200); padding: 28px 0; color: var(--mu
   .project-featured { grid-column: auto; }
   .technical-card .project-image { aspect-ratio: 16 / 10; }
   .achievement-grid { grid-template-columns: 1fr; }
+  .project-open { grid-template-rows: 200px 1fr; }
   .hero { text-align: center; padding-top: 55px; }
   .hero-copy { order: 2; }.portrait-wrap { max-width: 310px; }.actions { justify-content: center; }
 }
