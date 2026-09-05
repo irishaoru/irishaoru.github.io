@@ -228,13 +228,19 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .floating-leaf { top: 56%; left: 1%; font-size: 3.5rem; transform: rotate(-25deg); opacity: .55; }
 .tiny-mushroom { bottom: 5%; left: 4%; color: #b75f71 !important; font-size: 2.7rem; transform: rotate(180deg); opacity: .7; }
 @keyframes fairy-float { 50% { transform: translate(-18px, -22px) rotate(12deg); } }
-.interest-garden { position: relative; min-height: 600px; overflow: hidden; border: 1px solid rgba(255,255,255,.9); border-radius: 34px 12px 34px 12px; background: linear-gradient(rgba(255,248,251,.08), rgba(57,43,51,.06)), url("fairy-garden.png") center / cover; box-shadow: 0 28px 65px rgba(57,43,51,.18), inset 0 0 35px rgba(255,255,255,.45); }
+#interests { position: relative; min-height: 760px; padding-top: 58px; background: linear-gradient(180deg, rgba(255,248,251,.28), rgba(255,248,251,.04) 30%, rgba(255,248,251,.08) 74%, var(--rose-50)), url("fairy-garden.png") center / cover no-repeat; }
+#interests::before, #interests::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; height: 70px; pointer-events: none; }
+#interests::before { top: 0; background: linear-gradient(var(--rose-50), transparent); }
+#interests::after { bottom: 0; background: linear-gradient(transparent, var(--rose-50)); }
+#interests .container { position: relative; z-index: 2; }
+#interests .section-heading { padding: 16px 22px; border-radius: 18px 6px 18px 6px; background: rgba(255,248,251,.62); backdrop-filter: blur(7px); box-shadow: 0 10px 28px rgba(57,43,51,.07); }
+.interest-garden { position: relative; min-height: 570px; overflow: visible; }
 .garden-hint { position: absolute; top: 22px; left: 50%; margin: 0; padding: 9px 16px; border: 1px solid rgba(255,255,255,.75); border-radius: 99px; background: rgba(255,248,251,.72); color: var(--rose-700); font-size: .76rem; font-weight: 700; backdrop-filter: blur(9px); transform: translateX(-50%); white-space: nowrap; }
 .garden-secret { position: absolute; z-index: 2; }
 .garden-secret summary { display: grid; place-items: center; width: 54px; height: 54px; border: 1px solid rgba(255,255,255,.8); border-radius: 50%; background: rgba(255,248,251,.3); cursor: pointer; list-style: none; font-size: 1.8rem; filter: drop-shadow(0 5px 8px rgba(57,43,51,.28)); backdrop-filter: blur(4px); transition: transform .25s ease, background .25s ease; }
 .garden-secret summary::-webkit-details-marker { display: none; }
 .garden-secret summary:hover, .garden-secret[open] summary { background: rgba(255,248,251,.85); transform: scale(1.12) rotate(8deg); }
-.garden-label { position: absolute; z-index: 3; width: 190px; margin-top: 8px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.85); border-radius: 15px 5px 15px 5px; background: rgba(255,248,251,.9); box-shadow: 0 12px 25px rgba(57,43,51,.18); backdrop-filter: blur(10px); animation: garden-reveal .35s ease both; }
+.garden-label { position: absolute; z-index: 3; width: max-content; min-width: 110px; margin-top: 8px; padding: 10px 14px; border: 1px solid rgba(255,255,255,.85); border-radius: 15px 5px 15px 5px; background: rgba(255,248,251,.9); box-shadow: 0 12px 25px rgba(57,43,51,.18); backdrop-filter: blur(10px); text-align: center; animation: garden-reveal .35s ease both; }
 .garden-label strong, .garden-label small { display: block; }
 .garden-label strong { color: var(--rose-700); font-family: var(--serif); font-size: 1.2rem; }
 .garden-label small { margin-top: 3px; color: var(--muted); line-height: 1.35; }
@@ -279,9 +285,10 @@ footer { border-top: 1px solid var(--rose-200); padding: 28px 0; color: var(--mu
   .award-meta { align-items: flex-start; flex-direction: column; gap: 3px; }
   .shell-grid, .flower-grid { grid-template-columns: 1fr; }
   .game-screen { width: min(280px, 88vw); margin-inline: auto; }
-  .interest-garden { min-height: 680px; }
+  #interests { min-height: 820px; background-position: 44% center; }
+  .interest-garden { min-height: 650px; }
   .secret-travel { top: 20%; left: 14%; }.secret-swim { top: 48%; left: 45%; }.secret-ski { top: 27%; right: 12%; }.secret-content { bottom: 17%; left: 10%; }.secret-film { bottom: 12%; right: 12%; }
-  .garden-label { width: 160px; }
+  .garden-label { min-width: 105px; }
   .hero { text-align: center; padding-top: 55px; }
   .hero-copy { order: 2; }.portrait-wrap { max-width: 310px; }.actions { justify-content: center; }
 }
