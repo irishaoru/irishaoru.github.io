@@ -136,7 +136,7 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .technical-card { display: grid; grid-template-columns: minmax(250px, .72fr) 1.28fr; }
 .technical-card .project-image { aspect-ratio: 4 / 3; }
 .technical-card .tag-list { margin-block: 8px 22px; }
-.technical-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, .72fr); align-items: center; gap: clamp(40px, 7vw, 90px); padding: 20px 0; }
+.technical-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .72fr); align-items: center; gap: clamp(28px, 5vw, 70px); padding: 20px 0; }
 .technical-copy h3 { margin: 16px 0; font-size: clamp(2.3rem, 5vw, 4rem); }
 .technical-copy > p { max-width: 620px; color: var(--muted); }
 .technical-points { display: grid; gap: 8px; padding-left: 20px; color: var(--muted); }
@@ -155,10 +155,11 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .shell-award { text-align: center; }
 .shell-award summary { display: grid; justify-items: center; gap: 13px; cursor: pointer; list-style: none; color: var(--rose-700); font-size: .72rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
 .shell-award summary::-webkit-details-marker { display: none; }
-.seashell { position: relative; display: block; width: min(190px, 75vw); aspect-ratio: 1.15; border: 2px solid rgba(189,102,141,.2); border-radius: 52% 52% 18% 18% / 76% 76% 24% 24%; background: repeating-conic-gradient(from -34deg at 50% 100%, rgba(255,255,255,.9) 0 8deg, rgba(247,220,232,.9) 9deg 16deg), linear-gradient(#fff, var(--rose-200)); box-shadow: inset 0 12px 24px rgba(255,255,255,.85), inset 0 -12px 25px rgba(189,102,141,.18), 0 18px 35px rgba(127,63,93,.15); transform-origin: 50% 100%; transition: transform .65s cubic-bezier(.2,.8,.2,1), filter .4s ease; }
-.seashell::before { content: ""; position: absolute; left: 50%; bottom: -9px; width: 44px; height: 22px; border-radius: 50%; background: var(--rose-300); transform: translateX(-50%); box-shadow: inset 0 4px 8px rgba(255,255,255,.65); }
+.seashell { position: relative; display: block; width: min(220px, 76vw); transform-origin: 50% 100%; filter: drop-shadow(0 18px 17px rgba(127,63,93,.2)); transition: transform .65s cubic-bezier(.2,.8,.2,1), filter .4s ease; }
+.seashell img { width: 100%; height: auto; }
+.coral-shell img { filter: hue-rotate(158deg) saturate(1.25) brightness(1.03); }
+.pink-shell img { filter: hue-rotate(75deg) saturate(1.12) brightness(1.05); }
 .seashell i { position: absolute; left: 50%; top: 43%; width: 25px; height: 25px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #f4c9df 42%, #bd668d); box-shadow: 0 0 18px rgba(255,255,255,.95), 0 5px 12px rgba(127,63,93,.18); transform: translate(-50%, -50%); }
-.gold-shell { background: repeating-conic-gradient(from -34deg at 50% 100%, #fffdf4 0 8deg, #f8e9bd 9deg 16deg), linear-gradient(#fffdf4, #efd18b); }
 .shell-award summary:hover .seashell { filter: brightness(1.04); transform: translateY(-5px) rotate(-1deg); }
 .shell-award[open] .seashell { transform: perspective(500px) rotateX(-34deg) translateY(-8px); }
 .shell-award[open] summary > span:last-child { font-size: 0; }
@@ -237,7 +238,7 @@ footer { border-top: 1px solid var(--rose-200); padding: 28px 0; color: var(--mu
   .project-open { grid-template-rows: 200px 1fr; }
   .award-card { grid-template-columns: 1fr; }
   .award-meta { align-items: flex-start; flex-direction: column; gap: 3px; }
-  .technical-feature, .shell-grid { grid-template-columns: 1fr; }
+  .shell-grid { grid-template-columns: 1fr; }
   .game-screen { width: min(340px, 88vw); margin-inline: auto; }
   .hero { text-align: center; padding-top: 55px; }
   .hero-copy { order: 2; }.portrait-wrap { max-width: 310px; }.actions { justify-content: center; }
@@ -247,4 +248,7 @@ footer { border-top: 1px solid var(--rose-200); padding: 28px 0; color: var(--mu
   .nav-links a { padding-inline: 6px; font-size: .76rem; }
   .fairy-toggle { padding-inline: 12px; font-size: .75rem; }
   .interest-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .technical-feature { grid-template-columns: 1fr; }
 }
