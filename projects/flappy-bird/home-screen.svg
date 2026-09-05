@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600" role="img" aria-labelledby="title desc">
+  <title id="title">Customizable Flappy Bird home screen</title>
+  <desc id="desc">The blue game setup screen showing Play and eight customizable game-mode buttons.</desc>
+  <rect width="400" height="600" fill="#87ceeb"/>
+  <text x="200" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700">Flappy Bird</text>
+  <text x="200" y="168" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700">Set up your game mode!</text>
+  <g font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#17242a" stroke="#111" stroke-width="1">
+    <rect x="110" y="220" width="180" height="50" rx="2" fill="#90ee90"/><text x="200" y="251" stroke="none">Play!</text>
+    <rect x="25" y="350" width="105" height="50" rx="2" fill="#f0e68c"/><text x="77.5" y="381" stroke="none">Life Mode</text>
+    <rect x="150" y="350" width="105" height="50" rx="2" fill="#f0e68c"/><text x="202.5" y="381" stroke="none">Gravity</text>
+    <rect x="270" y="350" width="105" height="50" rx="2" fill="#f0e68c"/><text x="322.5" y="381" stroke="none">Flying Mode</text>
+    <rect x="25" y="420" width="105" height="50" rx="2" fill="#f0e68c"/><text x="77.5" y="451" stroke="none">Pipe Mode</text>
+    <rect x="150" y="420" width="105" height="50" rx="2" fill="#f0e68c"/><text x="202.5" y="451" stroke="none">Food Mode</text>
+    <rect x="270" y="420" width="105" height="50" rx="2" fill="#f0e68c"/><text x="322.5" y="451" stroke="none">Enemy Mode</text>
+    <rect x="25" y="490" width="105" height="50" rx="2" fill="#f0e68c"/><text x="77.5" y="521" stroke="none">Bot Mode</text>
+  </g>
+</svg>
