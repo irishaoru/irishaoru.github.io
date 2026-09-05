@@ -153,6 +153,11 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .project-art img { position: relative; z-index: 1; width: min(88%, 520px); height: auto; }
 .project-art small { color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
 .depaul-art { background: radial-gradient(circle at 75% 20%, rgba(255,255,255,.95), transparent 28%), linear-gradient(145deg, rgba(239,229,255,.8), rgba(247,220,232,.86), rgba(255,255,255,.9)); }
+.flappy-art { position: relative; background: linear-gradient(#dff2ff 0 70%, #e4f1c8 70%); }
+.flappy-art .flappy-bird { position: absolute; left: 43%; top: 38%; color: #ffd84d; font-size: 5rem; line-height: 1; text-shadow: 0 5px 0 #e2a92f; }
+.flappy-art .flappy-wing { position: absolute; left: 44%; top: 49%; color: #f4b936; font-size: 2.2rem; transform: rotate(-18deg); }
+.flappy-art .flappy-beak { position: absolute; left: 57%; top: 47%; color: #f08b54; font-size: 1.2rem; transform: scaleX(1.5) rotate(45deg); }
+.flappy-art small { position: absolute; bottom: 18px; }
 .project-preview-copy { display: grid; align-content: center; gap: 7px; padding: 22px 26px 26px; }
 .project-preview-copy small { color: var(--rose-500); font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
 .project-preview-copy strong { color: var(--ink); font: 400 clamp(1.45rem, 2.5vw, 2rem) var(--serif); line-height: 1.08; }
