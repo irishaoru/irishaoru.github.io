@@ -40,6 +40,7 @@ img { display: block; max-width: 100%; }
   background: rgba(255, 248, 251, .84);
   backdrop-filter: blur(18px);
 }
+.site-header::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 12px; pointer-events: none; background: radial-gradient(circle, #ffe8a8 0 2px, transparent 3px) 0 0 / 38px 12px repeat-x; filter: drop-shadow(0 0 5px #ffd986); opacity: .8; }
 .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
 .brand { text-decoration: none; font-family: var(--serif); font-size: 1.45rem; font-style: italic; letter-spacing: .02em; white-space: nowrap; }
 .brand-mark { color: var(--rose-500); }
@@ -53,6 +54,7 @@ img { display: block; max-width: 100%; }
 }
 .fairy-toggle:hover, .button:hover { transform: translateY(-2px); background: var(--rose-500); }
 .fairy-toggle[aria-pressed="true"] { background: var(--rose-500); }
+.fairy-toggle { position: fixed; right: 22px; bottom: 22px; z-index: 500; }
 .menu-button { display: none; border: 0; background: none; font-size: 1.5rem; color: var(--rose-700); }
 
 main { min-height: calc(100vh - 160px); }
@@ -83,6 +85,7 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .section-tint { background: rgba(252, 238, 244, .54); border-block: 1px solid rgba(189, 102, 141, .09); }
 .section-heading { max-width: 720px; margin-bottom: 30px; }
 .section-heading h2 { margin-bottom: 16px; }
+.section-heading::after { content: "❧  ✦  ❧"; display: block; margin-top: 8px; color: rgba(92,126,83,.55); font-family: var(--serif); letter-spacing: .22em; }
 .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .card { background: rgba(255,255,255,.72); border: 1px solid rgba(189,102,141,.16); border-radius: 22px; padding: 30px; box-shadow: var(--shadow); }
@@ -219,6 +222,25 @@ h3 { font-size: 1.55rem; margin: 0 0 10px; }
 .interest-card { display: grid; place-items: center; align-content: center; min-height: 180px; padding: 24px 14px; text-align: center; }
 .interest-card h3 { font-size: 1.2rem; }
 .interest-icon { display: inline-grid; place-items: center; width: 54px; height: 54px; margin-bottom: 18px; border-radius: 50%; background: var(--rose-100); color: var(--rose-500); font: 1.65rem var(--serif); }
+.fairy-scenery { position: fixed; inset: 0; z-index: 90; pointer-events: none; overflow: hidden; }
+.fairy-scenery span { position: absolute; color: #6f976a; text-shadow: 0 0 9px rgba(255,255,255,.9); }
+.floating-butterfly { top: 22%; right: 3%; color: #c579a0 !important; font-size: 2.2rem; transform: rotate(35deg); animation: fairy-float 7s ease-in-out infinite; }
+.floating-leaf { top: 56%; left: 1%; font-size: 3.5rem; transform: rotate(-25deg); opacity: .55; }
+.tiny-mushroom { bottom: 5%; left: 4%; color: #b75f71 !important; font-size: 2.7rem; transform: rotate(180deg); opacity: .7; }
+@keyframes fairy-float { 50% { transform: translate(-18px, -22px) rotate(12deg); } }
+.interest-garden { position: relative; min-height: 600px; overflow: hidden; border: 1px solid rgba(255,255,255,.9); border-radius: 34px 12px 34px 12px; background: linear-gradient(rgba(255,248,251,.08), rgba(57,43,51,.06)), url("fairy-garden.png") center / cover; box-shadow: 0 28px 65px rgba(57,43,51,.18), inset 0 0 35px rgba(255,255,255,.45); }
+.garden-hint { position: absolute; top: 22px; left: 50%; margin: 0; padding: 9px 16px; border: 1px solid rgba(255,255,255,.75); border-radius: 99px; background: rgba(255,248,251,.72); color: var(--rose-700); font-size: .76rem; font-weight: 700; backdrop-filter: blur(9px); transform: translateX(-50%); white-space: nowrap; }
+.garden-secret { position: absolute; z-index: 2; }
+.garden-secret summary { display: grid; place-items: center; width: 54px; height: 54px; border: 1px solid rgba(255,255,255,.8); border-radius: 50%; background: rgba(255,248,251,.3); cursor: pointer; list-style: none; font-size: 1.8rem; filter: drop-shadow(0 5px 8px rgba(57,43,51,.28)); backdrop-filter: blur(4px); transition: transform .25s ease, background .25s ease; }
+.garden-secret summary::-webkit-details-marker { display: none; }
+.garden-secret summary:hover, .garden-secret[open] summary { background: rgba(255,248,251,.85); transform: scale(1.12) rotate(8deg); }
+.garden-label { position: absolute; z-index: 3; width: 190px; margin-top: 8px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.85); border-radius: 15px 5px 15px 5px; background: rgba(255,248,251,.9); box-shadow: 0 12px 25px rgba(57,43,51,.18); backdrop-filter: blur(10px); animation: garden-reveal .35s ease both; }
+.garden-label strong, .garden-label small { display: block; }
+.garden-label strong { color: var(--rose-700); font-family: var(--serif); font-size: 1.2rem; }
+.garden-label small { margin-top: 3px; color: var(--muted); line-height: 1.35; }
+.secret-travel { top: 24%; left: 25%; }.secret-swim { top: 61%; left: 47%; }.secret-ski { top: 19%; right: 24%; }.secret-content { bottom: 16%; left: 16%; }.secret-film { bottom: 13%; right: 17%; }
+.secret-ski .garden-label, .secret-film .garden-label { right: 0; }
+@keyframes garden-reveal { from { opacity: 0; transform: translateY(-8px) scale(.92); } }
 
 .contact-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 30px; }
 .contact-list { list-style: none; padding: 0; }
@@ -246,7 +268,7 @@ footer { border-top: 1px solid var(--rose-200); padding: 28px 0; color: var(--mu
   .menu-button { display: block; }
   .nav-links { display: none; position: absolute; top: 76px; left: 20px; right: 20px; flex-direction: column; align-items: stretch; padding: 14px; background: var(--rose-50); border: 1px solid var(--rose-200); border-radius: 16px; box-shadow: var(--shadow); }
   .nav-links.open { display: flex; }
-  .fairy-toggle { margin-left: auto; padding: 9px 12px; }
+  .fairy-toggle { right: 14px; bottom: 14px; padding: 9px 12px; }
   .hero, .grid-2, .grid-3, .contact-layout, .interest-grid { grid-template-columns: 1fr; }
   .project-grid, .project-featured, .technical-card { grid-template-columns: 1fr; }
   .project-featured { grid-column: auto; }
@@ -257,6 +279,9 @@ footer { border-top: 1px solid var(--rose-200); padding: 28px 0; color: var(--mu
   .award-meta { align-items: flex-start; flex-direction: column; gap: 3px; }
   .shell-grid, .flower-grid { grid-template-columns: 1fr; }
   .game-screen { width: min(280px, 88vw); margin-inline: auto; }
+  .interest-garden { min-height: 680px; }
+  .secret-travel { top: 20%; left: 14%; }.secret-swim { top: 48%; left: 45%; }.secret-ski { top: 27%; right: 12%; }.secret-content { bottom: 17%; left: 10%; }.secret-film { bottom: 12%; right: 12%; }
+  .garden-label { width: 160px; }
   .hero { text-align: center; padding-top: 55px; }
   .hero-copy { order: 2; }.portrait-wrap { max-width: 310px; }.actions { justify-content: center; }
 }
