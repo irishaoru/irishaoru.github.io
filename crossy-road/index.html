@@ -3,16 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crossy Road</title>
+  <title>CMU Crossy Road</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* CMU brand + arcade palette */
+      --cmu-red:      #c41230;
+      --cmu-red-d:    #8a0b20;
+      --cmu-gray:     #63666a;
+      --cmu-gold:     #e8b04b;
+      --sky:          #87ceeb;
+      --green:        #4ecb3f;
+      --orange:       #ff7b28;
+      --orange-d:     #c95500;
+      --yellow:       #ffe234;
+      --white:        #ffffff;
+      --dark:         #1a1a2e;
+    }
 
     body {
-      background: #1a1a2e;
+      background: #000;
       overflow: hidden;
-      font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-family: 'Press Start 2P', monospace;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
+
+    canvas { display: block; }
 
     #game-container {
       width: 100vw;
@@ -20,11 +40,9 @@
       position: relative;
     }
 
-    canvas {
-      display: block;
-    }
-
-    /* ── HUD ─────────────────────────────────────────── */
+    /* ═══════════════════════════════════════
+       HUD
+    ═══════════════════════════════════════ */
     #hud {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -32,227 +50,559 @@
       z-index: 10;
     }
 
+    .hud-pill {
+      position: absolute;
+      top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.52);
+      border: 2px solid rgba(255,255,255,0.22);
+      border-radius: 50px;
+      padding: 7px 16px 7px 12px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    }
+
+    /* Score — steps taken */
+    #score-pill { left: 14px; }
+    #score-icon { font-size: 18px; line-height: 1; }
     #score-display {
-      position: absolute;
-      top: 24px;
+      color: var(--white);
+      font-size: clamp(14px, 3vw, 20px);
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.7);
+      min-width: 2ch;
+    }
+
+    /* Timer — center top */
+    #timer-pill {
       left: 50%;
       transform: translateX(-50%);
+      background: rgba(196,18,48,0.75);
+      border-color: rgba(255,180,180,0.4);
+      padding: 7px 22px;
+      gap: 10px;
+    }
+    #timer-icon { font-size: 18px; }
+    #timer-display {
+      color: var(--white);
+      font-size: clamp(16px, 3.5vw, 22px);
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.7);
+      min-width: 4ch;
+      text-align: center;
+    }
+    #timer-pill.urgent {
+      background: rgba(220,0,0,0.88);
+      animation: timerPulse 0.5s ease-in-out infinite alternate;
+    }
+    @keyframes timerPulse {
+      from { transform: translateX(-50%) scale(1);    }
+      to   { transform: translateX(-50%) scale(1.06); }
+    }
+
+    /* Coins — right */
+    #coin-pill { right: 14px; }
+    .coin-icon {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fff176, #ffd600, #f9a825);
+      border: 2px solid #f57f17;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+      flex-shrink: 0;
+    }
+    #coin-display {
+      color: var(--yellow);
+      font-size: clamp(14px, 3vw, 18px);
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.7);
+      min-width: 3ch;
+    }
+
+    /* Difficulty badge — bottom of hud strip */
+    #diff-badge {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      /* hidden during play, timer-pill is shown instead */
+      display: none;
+    }
+
+    /* ═══════════════════════════════════════
+       LEVEL LABEL (shown briefly at start)
+    ═══════════════════════════════════════ */
+    #level-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 25;
+      display: none;
+      pointer-events: none;
+    }
+    #level-label .lv-num {
+      font-size: clamp(13px, 3vw, 18px);
+      color: var(--cmu-gold);
+      text-shadow: 2px 2px 0 #000;
+      letter-spacing: 2px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    #level-label .lv-name {
+      font-size: clamp(10px, 2.2vw, 14px);
       color: #fff;
-      font-size: 56px;
-      font-weight: 900;
-      text-shadow:
-        0 4px 0 #000,
-        0 0 24px rgba(255,220,50,0.7);
-      letter-spacing: 3px;
+      text-shadow: 2px 2px 0 #000;
+      letter-spacing: 1px;
+      display: block;
     }
 
-    #best-display {
-      position: absolute;
-      top: 92px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: #ffd700;
-      font-size: 20px;
-      font-weight: 700;
-      text-shadow: 0 2px 0 #000;
-      opacity: 0.9;
-    }
-
-    /* ── Screens ─────────────────────────────────────── */
-    .screen {
+    /* ═══════════════════════════════════════
+       SPLASH SCREEN
+    ═══════════════════════════════════════ */
+    #splash-screen {
       position: absolute;
       inset: 0;
+      background: linear-gradient(180deg, #87ceeb 0%, #6ab8d8 55%, #4da0c0 100%);
       display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    /* Ground strip */
+    #splash-screen::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 26%;
+      background: linear-gradient(180deg, #56c448 0%, #3da830 100%);
+      z-index: 0;
+    }
+
+    .splash-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Logo ── */
+    .logo-wrap {
+      position: relative;
+      margin-bottom: 40px;
+      animation: logoFloat 2.2s ease-in-out infinite alternate;
+    }
+    @keyframes logoFloat {
+      from { transform: rotate(-3deg) translateY(0px); }
+      to   { transform: rotate(-3deg) translateY(-14px); }
+    }
+
+    .logo-front {
+      position: relative;
+      z-index: 2;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(22px, 5.5vw, 44px);
+      line-height: 1.4;
+      letter-spacing: 3px;
+      text-align: center;
+      color: #fff;
+      text-shadow:
+         2px  0   0 #000, -2px  0   0 #000,
+         0    2px 0 #000,  0   -2px 0 #000,
+         2px  2px 0 #000, -2px -2px 0 #000,
+         2px -2px 0 #000, -2px  2px 0 #000;
+    }
+    /* CMU red accent on "CMU" */
+    .logo-front .cmu-word {
+      color: var(--cmu-gold);
+      text-shadow:
+         2px  0   0 #000, -2px  0   0 #000,
+         0    2px 0 #000,  0   -2px 0 #000,
+         2px  2px 0 #000, -2px -2px 0 #000,
+         2px -2px 0 #000, -2px  2px 0 #000;
+    }
+
+    .logo-depth {
+      position: absolute;
+      z-index: 1;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(22px, 5.5vw, 44px);
+      line-height: 1.4;
+      letter-spacing: 3px;
+      text-align: center;
+      color: #000;
+      top: 0; left: 0; right: 0;
+      transform: translate(8px, 10px);
+      pointer-events: none;
+    }
+
+    .splash-subtitle {
+      font-size: clamp(8px, 1.8vw, 11px);
+      color: rgba(0,0,0,0.55);
+      letter-spacing: 2px;
+      margin-bottom: 36px;
+      text-align: center;
+    }
+
+    /* ── Difficulty selector ── */
+    .diff-label {
+      font-size: clamp(8px, 1.8vw, 11px);
+      color: rgba(0,0,0,0.6);
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .diff-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 44px;
+    }
+
+    .diff-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(8px, 1.8vw, 11px);
+      letter-spacing: 1px;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s, opacity 0.15s;
+      opacity: 0.72;
+    }
+    .diff-btn.easy   { background: #27ae60; box-shadow: 0 5px 0 #1a7a42; }
+    .diff-btn.medium { background: var(--orange); box-shadow: 0 5px 0 #b35500; }
+    .diff-btn.hard   { background: var(--cmu-red); box-shadow: 0 5px 0 var(--cmu-red-d); }
+
+    .diff-btn.selected { opacity: 1; transform: translateY(-3px); }
+    .diff-btn.easy.selected   { box-shadow: 0 8px 0 #1a7a42, 0 12px 20px rgba(0,0,0,0.3); }
+    .diff-btn.medium.selected { box-shadow: 0 8px 0 #b35500, 0 12px 20px rgba(0,0,0,0.3); }
+    .diff-btn.hard.selected   { box-shadow: 0 8px 0 var(--cmu-red-d), 0 12px 20px rgba(0,0,0,0.3); }
+
+    .diff-btn:active { transform: translateY(3px) !important; }
+
+    .splash-tap {
+      font-size: clamp(8px, 1.8vw, 11px);
+      color: rgba(0,0,0,0.45);
+      letter-spacing: 2px;
+      animation: tapBlink 1.2s step-end infinite;
+    }
+    @keyframes tapBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ═══════════════════════════════════════
+       SHARED OVERLAY BASE
+    ═══════════════════════════════════════ */
+    .overlay-screen {
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(4px);
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 20;
     }
 
-    #start-screen {
-      background: radial-gradient(ellipse at center,
-        rgba(20,20,40,0.88) 0%, rgba(0,0,0,0.94) 100%);
+    /* Stats card */
+    .go-card {
+      background: rgba(255,255,255,0.10);
+      border: 2px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 24px 40px;
+      margin-bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      min-width: min(300px, 82vw);
     }
-
-    #gameover-screen {
-      background: radial-gradient(ellipse at center,
-        rgba(160,20,20,0.78) 0%, rgba(0,0,0,0.92) 100%);
-      display: none;
+    .go-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
     }
-
-    .screen-title {
-      font-size: 74px;
-      font-weight: 900;
-      color: #fff;
-      text-shadow:
-        0 6px 0 #c06000,
-        0 12px 28px rgba(0,0,0,0.6);
-      letter-spacing: 5px;
-      margin-bottom: 14px;
-      animation: titleBounce 1.3s ease-in-out infinite alternate;
-    }
-
-    @keyframes titleBounce {
-      from { transform: translateY(0px) scale(1); }
-      to   { transform: translateY(-10px) scale(1.02); }
-    }
-
-    .screen-subtitle {
-      font-size: 22px;
-      color: #ffd700;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-      margin-bottom: 52px;
+    .go-label {
+      font-size: clamp(7px, 1.6vw, 10px);
+      color: rgba(255,255,255,0.55);
       letter-spacing: 1px;
     }
+    .go-value {
+      font-size: clamp(12px, 2.8vw, 18px);
+      color: var(--white);
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+    }
+    .go-value.gold  { color: var(--yellow); }
+    .go-value.green { color: #5dff6e; }
+    .go-value.red   { color: #ff6b6b; }
+    .go-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+      margin: 0 -8px;
+    }
 
+    /* Chunky button */
     .btn {
-      background: linear-gradient(180deg, #ff9f00, #e06a00);
-      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(10px, 2vw, 13px);
+      letter-spacing: 2px;
+      color: var(--white);
+      background: linear-gradient(180deg, var(--orange) 0%, #e06000 100%);
       border: none;
-      border-radius: 50px;
-      padding: 18px 68px;
-      font-size: 28px;
-      font-weight: 900;
+      border-radius: 14px;
+      padding: 16px 44px;
       cursor: pointer;
-      box-shadow: 0 8px 0 #9a4400, 0 14px 28px rgba(0,0,0,0.45);
-      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 0 7px 0 var(--orange-d), 0 11px 18px rgba(0,0,0,0.4);
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+    .btn:hover  { transform: translateY(-3px); box-shadow: 0 10px 0 var(--orange-d), 0 15px 26px rgba(0,0,0,0.45); }
+    .btn:active { transform: translateY(4px);  box-shadow: 0 3px 0 var(--orange-d), 0 5px 10px rgba(0,0,0,0.3); }
+    .btn.red-btn {
+      background: linear-gradient(180deg, var(--cmu-red) 0%, #9a0020 100%);
+      box-shadow: 0 7px 0 var(--cmu-red-d), 0 11px 18px rgba(0,0,0,0.4);
+    }
+    .btn.red-btn:hover  { box-shadow: 0 10px 0 var(--cmu-red-d), 0 15px 26px rgba(0,0,0,0.45); }
+    .btn.red-btn:active { box-shadow: 0 3px 0 var(--cmu-red-d), 0 5px 10px rgba(0,0,0,0.3); }
+
+    /* ═══════════════════════════════════════
+       GAME OVER SCREEN
+    ═══════════════════════════════════════ */
+    #gameover-screen {
+      background: linear-gradient(160deg, rgba(100,0,0,0.82) 0%, rgba(0,0,0,0.92) 100%);
+    }
+    .go-title {
+      font-size: clamp(18px, 4.5vw, 30px);
+      color: var(--white);
       letter-spacing: 3px;
-      text-transform: uppercase;
-      font-family: inherit;
-    }
-
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 11px 0 #9a4400, 0 18px 34px rgba(0,0,0,0.5);
-    }
-
-    .btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 4px 0 #9a4400, 0 6px 12px rgba(0,0,0,0.3);
-    }
-
-    #gameover-score {
-      font-size: 42px;
-      color: #fff;
-      font-weight: 900;
-      text-shadow: 0 4px 0 #000;
       margin-bottom: 8px;
+      text-shadow: 3px 3px 0 var(--cmu-red-d), 6px 6px 0 rgba(100,0,0,0.4);
+    }
+    #go-reason {
+      font-size: clamp(7px, 1.6vw, 10px);
+      color: rgba(255,160,160,0.9);
+      letter-spacing: 1px;
+      margin-bottom: 28px;
     }
 
-    #gameover-best {
-      font-size: 22px;
-      color: #ffd700;
-      font-weight: 700;
-      text-shadow: 0 2px 0 #000;
-      margin-bottom: 44px;
+    /* ═══════════════════════════════════════
+       LEVEL COMPLETE SCREEN
+    ═══════════════════════════════════════ */
+    #levelcomplete-screen {
+      background: linear-gradient(160deg, rgba(0,60,20,0.85) 0%, rgba(0,0,0,0.92) 100%);
+    }
+    .lc-title {
+      font-size: clamp(16px, 4vw, 26px);
+      color: #5dff6e;
+      letter-spacing: 3px;
+      margin-bottom: 6px;
+      text-shadow: 3px 3px 0 #1a7a42, 6px 6px 0 rgba(0,60,0,0.5);
+    }
+    .lc-subtitle {
+      font-size: clamp(7px, 1.6vw, 10px);
+      color: var(--cmu-gold);
+      letter-spacing: 2px;
+      margin-bottom: 28px;
     }
 
-    .controls-hint {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: rgba(255,255,255,0.55);
-      font-size: 15px;
-      text-align: center;
-      line-height: 1.9;
-      white-space: nowrap;
-      pointer-events: none;
-    }
-
-    /* ── Mobile D-pad ────────────────────────────────── */
+    /* ═══════════════════════════════════════
+       MOBILE D-PAD
+    ═══════════════════════════════════════ */
     #mobile-controls {
       position: absolute;
-      bottom: 36px;
+      bottom: 28px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
       display: none;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
-
-    .mobile-row { display: flex; gap: 6px; }
-
+    .mobile-row { display: flex; gap: 5px; }
     .dpad-btn {
-      width: 66px;
-      height: 66px;
-      background: rgba(255,255,255,0.14);
+      width: 62px; height: 62px;
+      background: rgba(196,18,48,0.28);
       border: 2px solid rgba(255,255,255,0.28);
       border-radius: 14px;
-      color: white;
-      font-size: 30px;
+      color: rgba(255,255,255,0.9);
+      font-size: 24px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(6px);
-      -webkit-tap-highlight-color: transparent;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       touch-action: manipulation;
-      transition: background 0.08s;
+      transition: background 0.07s, transform 0.07s;
     }
+    .dpad-btn:active { background: rgba(196,18,48,0.6); transform: scale(0.92); }
+    @media (pointer: coarse) { #mobile-controls { display: flex; } }
 
-    .dpad-btn:active { background: rgba(255,255,255,0.32); }
-
-    @media (pointer: coarse) {
-      #mobile-controls { display: flex; }
-      .controls-hint   { display: none;  }
-    }
-
-    /* ── Hop flash ────────────────────────────────────── */
+    /* ═══════════════════════════════════════
+       HOP FLASH & COIN POP
+    ═══════════════════════════════════════ */
     #hop-flash {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background: rgba(255,255,255,0);
       pointer-events: none;
       z-index: 5;
-      transition: background 0.09s;
+      transition: background 0.08s;
     }
     #hop-flash.flash { background: rgba(255,255,255,0.07); }
+
+    .coin-pop {
+      position: absolute;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      color: var(--yellow);
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.7);
+      pointer-events: none;
+      z-index: 15;
+      white-space: nowrap;
+      animation: coinPopAnim 0.7s ease-out forwards;
+    }
+    @keyframes coinPopAnim {
+      0%   { opacity: 1; transform: translateY(0)    scale(1.2); }
+      60%  { opacity: 1; transform: translateY(-26px) scale(1); }
+      100% { opacity: 0; transform: translateY(-42px) scale(0.8); }
+    }
+
+    /* Step pop */
+    .step-pop {
+      position: absolute;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: #fff;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.7);
+      pointer-events: none;
+      z-index: 15;
+      animation: coinPopAnim 0.6s ease-out forwards;
+    }
   </style>
 </head>
 <body>
 <div id="game-container">
 
+  <!-- ── HUD ─────────────────────────────── -->
   <div id="hud">
-    <div id="score-display">0</div>
-    <div id="best-display">BEST: 0</div>
+    <div class="hud-pill" id="score-pill">
+      <span id="score-icon">👟</span>
+      <span id="score-display">0</span>
+    </div>
+    <div class="hud-pill" id="timer-pill">
+      <span id="timer-icon">⏱</span>
+      <span id="timer-display">60</span>
+    </div>
+    <div class="hud-pill" id="coin-pill">
+      <div class="coin-icon"></div>
+      <span id="coin-display">0</span>
+    </div>
   </div>
 
   <div id="hop-flash"></div>
 
-  <!-- Start -->
-  <div class="screen" id="start-screen">
-    <div class="screen-title">CROSSY ROAD</div>
-    <div class="screen-subtitle">Hop across — don't get squished!</div>
-    <button class="btn" id="start-btn">PLAY</button>
-    <div class="controls-hint">
-      ↑ ↓ ← →  or  W A S D  to move<br>
-      Tap the screen to hop forward
+  <!-- Level label (brief flash at round start) -->
+  <div id="level-label">
+    <span class="lv-num">LEVEL 1</span>
+    <span class="lv-name">Margaret Morrison → Tepper</span>
+  </div>
+
+  <!-- ── Splash ────────────────────────────── -->
+  <div id="splash-screen">
+    <div class="splash-content">
+      <div class="logo-wrap">
+        <div class="logo-depth" aria-hidden="true">CMU<br>CROSSY<br>ROAD</div>
+        <div class="logo-front"><span class="cmu-word">CMU</span><br>CROSSY<br>ROAD</div>
+      </div>
+      <div class="splash-subtitle">Cross campus. Don't be late.</div>
+
+      <div class="diff-label">SELECT DIFFICULTY</div>
+      <div class="diff-buttons">
+        <button class="diff-btn easy"   data-diff="easy">EASY</button>
+        <button class="diff-btn medium selected" data-diff="medium">MED</button>
+        <button class="diff-btn hard"   data-diff="hard">HARD</button>
+      </div>
+      <div class="splash-tap">TAP TO START</div>
     </div>
   </div>
 
-  <!-- Game Over -->
-  <div class="screen" id="gameover-screen">
-    <div class="screen-title" style="font-size:58px;animation:none;">GAME OVER</div>
-    <div id="gameover-score">Score: 0</div>
-    <div id="gameover-best">Best: 0</div>
-    <button class="btn" id="restart-btn">PLAY AGAIN</button>
+  <!-- ── Game Over ──────────────────────────── -->
+  <div class="overlay-screen" id="gameover-screen">
+    <div class="go-title">GAME OVER</div>
+    <div id="go-reason">You got hit!</div>
+    <div class="go-card">
+      <div class="go-row">
+        <span class="go-label">STEPS</span>
+        <span class="go-value" id="gameover-score">0</span>
+      </div>
+      <div class="go-divider"></div>
+      <div class="go-row">
+        <span class="go-label">BEST</span>
+        <span class="go-value green" id="gameover-best">0</span>
+      </div>
+      <div class="go-divider"></div>
+      <div class="go-row">
+        <span class="go-label">COINS</span>
+        <span class="go-value gold" id="gameover-coins">0</span>
+      </div>
+      <div class="go-divider"></div>
+      <div class="go-row">
+        <span class="go-label">TIME LEFT</span>
+        <span class="go-value red" id="gameover-time">0s</span>
+      </div>
+    </div>
+    <button class="btn red-btn" id="restart-btn">TRY AGAIN</button>
   </div>
 
-  <!-- D-pad -->
+  <!-- ── Level Complete ─────────────────────── -->
+  <div class="overlay-screen" id="levelcomplete-screen">
+    <div class="lc-title">YOU MADE IT!</div>
+    <div class="lc-subtitle">Arrived at Tepper 🎉</div>
+    <div class="go-card">
+      <div class="go-row">
+        <span class="go-label">STEPS</span>
+        <span class="go-value" id="lc-score">0</span>
+      </div>
+      <div class="go-divider"></div>
+      <div class="go-row">
+        <span class="go-label">TIME LEFT</span>
+        <span class="go-value green" id="lc-time">0s</span>
+      </div>
+      <div class="go-divider"></div>
+      <div class="go-row">
+        <span class="go-label">COINS</span>
+        <span class="go-value gold" id="lc-coins">0</span>
+      </div>
+      <div class="go-divider"></div>
+      <div class="go-row">
+        <span class="go-label">DIFFICULTY</span>
+        <span class="go-value" id="lc-diff">MED</span>
+      </div>
+    </div>
+    <button class="btn" id="nextlevel-btn">PLAY AGAIN</button>
+  </div>
+
+  <!-- ── Mobile D-pad ───────────────────────── -->
   <div id="mobile-controls">
-    <div class="mobile-row"><div class="dpad-btn" id="btn-up">↑</div></div>
     <div class="mobile-row">
-      <div class="dpad-btn" id="btn-left">←</div>
-      <div class="dpad-btn" id="btn-down">↓</div>
-      <div class="dpad-btn" id="btn-right">→</div>
+      <div class="dpad-btn" id="btn-up">▲</div>
+    </div>
+    <div class="mobile-row">
+      <div class="dpad-btn" id="btn-left">◀</div>
+      <div class="dpad-btn" id="btn-down">▼</div>
+      <div class="dpad-btn" id="btn-right">▶</div>
     </div>
   </div>
 
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="game.js"></script>
 </body>
