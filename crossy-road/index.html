@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crossy Road</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #1a1a2e;
+      overflow: hidden;
+      font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+      user-select: none;
+    }
+
+    #game-container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    /* ── HUD ─────────────────────────────────────────── */
+    #hud {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    #score-display {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 56px;
+      font-weight: 900;
+      text-shadow:
+        0 4px 0 #000,
+        0 0 24px rgba(255,220,50,0.7);
+      letter-spacing: 3px;
+    }
+
+    #best-display {
+      position: absolute;
+      top: 92px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffd700;
+      font-size: 20px;
+      font-weight: 700;
+      text-shadow: 0 2px 0 #000;
+      opacity: 0.9;
+    }
+
+    /* ── Screens ─────────────────────────────────────── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    #start-screen {
+      background: radial-gradient(ellipse at center,
+        rgba(20,20,40,0.88) 0%, rgba(0,0,0,0.94) 100%);
+    }
+
+    #gameover-screen {
+      background: radial-gradient(ellipse at center,
+        rgba(160,20,20,0.78) 0%, rgba(0,0,0,0.92) 100%);
+      display: none;
+    }
+
+    .screen-title {
+      font-size: 74px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow:
+        0 6px 0 #c06000,
+        0 12px 28px rgba(0,0,0,0.6);
+      letter-spacing: 5px;
+      margin-bottom: 14px;
+      animation: titleBounce 1.3s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleBounce {
+      from { transform: translateY(0px) scale(1); }
+      to   { transform: translateY(-10px) scale(1.02); }
+    }
+
+    .screen-subtitle {
+      font-size: 22px;
+      color: #ffd700;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      margin-bottom: 52px;
+      letter-spacing: 1px;
+    }
+
+    .btn {
+      background: linear-gradient(180deg, #ff9f00, #e06a00);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 18px 68px;
+      font-size: 28px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 0 #9a4400, 0 14px 28px rgba(0,0,0,0.45);
+      transition: transform 0.1s, box-shadow 0.1s;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 11px 0 #9a4400, 0 18px 34px rgba(0,0,0,0.5);
+    }
+
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #9a4400, 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    #gameover-score {
+      font-size: 42px;
+      color: #fff;
+      font-weight: 900;
+      text-shadow: 0 4px 0 #000;
+      margin-bottom: 8px;
+    }
+
+    #gameover-best {
+      font-size: 22px;
+      color: #ffd700;
+      font-weight: 700;
+      text-shadow: 0 2px 0 #000;
+      margin-bottom: 44px;
+    }
+
+    .controls-hint {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.55);
+      font-size: 15px;
+      text-align: center;
+      line-height: 1.9;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* ── Mobile D-pad ────────────────────────────────── */
+    #mobile-controls {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mobile-row { display: flex; gap: 6px; }
+
+    .dpad-btn {
+      width: 66px;
+      height: 66px;
+      background: rgba(255,255,255,0.14);
+      border: 2px solid rgba(255,255,255,0.28);
+      border-radius: 14px;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: background 0.08s;
+    }
+
+    .dpad-btn:active { background: rgba(255,255,255,0.32); }
+
+    @media (pointer: coarse) {
+      #mobile-controls { display: flex; }
+      .controls-hint   { display: none;  }
+    }
+
+    /* ── Hop flash ────────────────────────────────────── */
+    #hop-flash {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      pointer-events: none;
+      z-index: 5;
+      transition: background 0.09s;
+    }
+    #hop-flash.flash { background: rgba(255,255,255,0.07); }
+  </style>
+</head>
+<body>
+<div id="game-container">
+
+  <div id="hud">
+    <div id="score-display">0</div>
+    <div id="best-display">BEST: 0</div>
+  </div>
+
+  <div id="hop-flash"></div>
+
+  <!-- Start -->
+  <div class="screen" id="start-screen">
+    <div class="screen-title">CROSSY ROAD</div>
+    <div class="screen-subtitle">Hop across — don't get squished!</div>
+    <button class="btn" id="start-btn">PLAY</button>
+    <div class="controls-hint">
+      ↑ ↓ ← →  or  W A S D  to move<br>
+      Tap the screen to hop forward
+    </div>
+  </div>
+
+  <!-- Game Over -->
+  <div class="screen" id="gameover-screen">
+    <div class="screen-title" style="font-size:58px;animation:none;">GAME OVER</div>
+    <div id="gameover-score">Score: 0</div>
+    <div id="gameover-best">Best: 0</div>
+    <button class="btn" id="restart-btn">PLAY AGAIN</button>
+  </div>
+
+  <!-- D-pad -->
+  <div id="mobile-controls">
+    <div class="mobile-row"><div class="dpad-btn" id="btn-up">↑</div></div>
+    <div class="mobile-row">
+      <div class="dpad-btn" id="btn-left">←</div>
+      <div class="dpad-btn" id="btn-down">↓</div>
+      <div class="dpad-btn" id="btn-right">→</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
