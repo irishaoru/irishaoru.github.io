@@ -1558,6 +1558,8 @@
     buildLevelWorld();
 
     playerGroup = new THREE.Group();
+    playerGroup.userData.ridingLog  = null;
+    playerGroup.userData.ridingLane = null;
     playerMesh  = buildPlayer(selectedCharId);
     playerGroup.add(playerMesh);
     playerGroup.position.set(0, 0, 0);
@@ -1769,7 +1771,7 @@
   }
 
   function rideLog(dt) {
-    if (gameState !== 'playing' || isHopping) return;
+    if (gameState !== 'playing' || isHopping || !playerGroup) return;
     const log  = playerGroup.userData.ridingLog;
     const lane = playerGroup.userData.ridingLane;
     if (!log || !lane) return;
@@ -1947,9 +1949,9 @@
 
   function startGame() {
     startScreen.style.display = 'none';
-    gameState = 'playing';
     try {
       initGame();
+      gameState = 'playing';
     } catch(err) {
       console.error('initGame crashed:', err);
       // Show error on screen
@@ -1964,8 +1966,8 @@
     goScreen.style.display  = 'none';
     lcScreen.style.display  = 'none';
     if (eagleMesh) { scene.remove(eagleMesh); eagleMesh = null; }
-    gameState = 'playing';
     initGame();
+    gameState = 'playing';
   }
 
   // ── Main loop ──────────────────────────────────────────────
