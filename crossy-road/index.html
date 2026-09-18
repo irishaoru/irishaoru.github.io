@@ -189,7 +189,11 @@
       justify-content: center;
       z-index: 30;
       cursor: pointer;
-      overflow: hidden;
+      /* Allow the splash to scroll if its content is taller than the
+         viewport so the START button is always reachable. */
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 20px 0;
     }
 
     /* Ground strip */
@@ -208,11 +212,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 28px 34px 24px;
+      padding: 22px 34px 20px;
       border-radius: 24px;
       background: rgba(0,0,0,0.16);
       box-shadow: 0 12px 40px rgba(0,0,0,0.25);
       backdrop-filter: blur(2px);
+      margin: auto;
     }
 
     /* ── CMU Tartan stripe accents (top & bottom of splash) ── */
