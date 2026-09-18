@@ -78,13 +78,23 @@
     coin        : 0xFFD700,
   };
 
-  // ── Difficulty Config (endless — no time limit) ────────────
-  // Difficulty scales hazard speed/frequency only.
+  // ── Difficulty Config ──────────────────────────────────────
+  // Difficulty scales hazard speed/frequency. In Rush mode it also
+  // sets the countdown time limit (seconds).
   const DIFFICULTY = {
-    easy:   { speedMult: 0.70, hazardMult: 0.70, label: 'EASY'   },
-    medium: { speedMult: 1.00, hazardMult: 1.00, label: 'MEDIUM' },
-    hard:   { speedMult: 1.40, hazardMult: 1.30, label: 'HARD'   },
+    easy:   { speedMult: 0.70, hazardMult: 0.70, label: 'EASY',   rushTime: 90 },
+    medium: { speedMult: 1.00, hazardMult: 1.00, label: 'MEDIUM', rushTime: 60 },
+    hard:   { speedMult: 1.40, hazardMult: 1.30, label: 'HARD',   rushTime: 40 },
   };
+
+  // ── Game modes ─────────────────────────────────────────────
+  // 'classic' = endless run (original gameplay, unchanged).
+  // 'rush'    = timed level; reach Tepper before time runs out.
+  const MODE = { CLASSIC: 'classic', RUSH: 'rush' };
+  let gameMode = MODE.CLASSIC;
+  // Distance (rows forward) to the Tepper destination in Rush mode.
+  const RUSH_DISTANCE = 40;
+  let destZ = null;         // z of the Tepper destination lane (rush mode)
 
   // ── Infinite world streaming ───────────────────────────────
   const ROWS_AHEAD  = 26;  // rows generated in front of the player
@@ -154,7 +164,9 @@
   const goCoins      = document.getElementById('gameover-coins');
   const goTime       = document.getElementById('gameover-time');
   const goReason     = document.getElementById('go-reason');
+  const objectiveBanner = document.getElementById('objective-banner');
   const lcScreen     = document.getElementById('levelcomplete-screen');
+  const lcReason     = document.getElementById('lc-reason');
   const lcScore      = document.getElementById('lc-score');
   const lcTime       = document.getElementById('lc-time');
   const lcCoins      = document.getElementById('lc-coins');
@@ -1378,7 +1390,35 @@
     } catch(e) {}
   }
 
-  // (Endless mode — no countdown timer.)
+  // ── Rush-mode countdown timer ──────────────────────────────
+  function formatTime(sec) {
+    const s = Math.max(0, Math.ceil(sec));
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+
+  function renderTimer() {
+    if (!timerEl) return;
+    timerEl.textContent = formatTime(timeLeft);
+    if (timerPill) timerPill.classList.toggle('urgent', timeLeft <= 10);
+  }
+
+  function startTimer() {
+    stopTimer();
+    renderTimer();
+    timerInterval = setInterval(() => {
+      if (gameState !== 'playing') return;
+      timeLeft -= 1;
+      renderTimer();
+      if (timeLeft <= 0) {
+        timeLeft = 0;
+        renderTimer();
+        triggerTimeout();
+      }
+    }, 1000);
+  }
+
   function stopTimer() {
     if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   }
@@ -1392,8 +1432,14 @@
 
   // Build a lane definition for a given z based on simple rules.
   function generateLaneDef(z) {
+    // Rush mode: fixed Tepper destination + safe run-up around it
+    if (gameMode === MODE.RUSH && destZ !== null) {
+      if (z === destZ)      return { type: LANE.DEST,  label: 'Tepper' };
+      if (z < destZ)        return { type: LANE.SAFE,  label: 'Tepper Quad' };
+      if (z === destZ + 1)  return { type: LANE.SAFE,  label: 'Almost there' };
+    }
     // First few rows are always safe/grass so the player has a beat to start
-    if (z === 0)  return { type: LANE.SAFE,  label: 'Start' };
+    if (z === 0)  return { type: LANE.SAFE,  label: 'Margaret Morrison' };
     if (z >= -2)  return { type: LANE.GRASS, label: pick(CAMPUS_GRASS_LABELS),
                            flags: Math.random() < 0.4 };
 
@@ -1552,6 +1598,19 @@
     deathReason = '';
     waterOffset = {};
 
+    // Mode-specific setup
+    if (gameMode === MODE.RUSH) {
+      destZ = -RUSH_DISTANCE;
+      timeLeft = DIFFICULTY[difficulty].rushTime;
+      if (timerPill) { timerPill.style.display = 'flex'; timerPill.classList.remove('urgent'); }
+      if (objectiveBanner) objectiveBanner.style.display = 'block';
+      renderTimer();
+    } else {
+      destZ = null;
+      if (timerPill) timerPill.style.display = 'none';
+      if (objectiveBanner) objectiveBanner.style.display = 'none';
+    }
+
     scoreEl.textContent = '0';
     coinEl.textContent  = '0';
 
@@ -1567,6 +1626,8 @@
 
     positionCamera(0);
     resetIdleTimer();
+
+    if (gameMode === MODE.RUSH) startTimer();
   }
 
   function clearWorld() {
@@ -1665,7 +1726,14 @@
       checkCollisions();
       checkCoinCollect();
       streamWorld();  // extend/cull the infinite world after each hop
+      checkReachedDest();  // rush mode: did we make it to Tepper?
     }
+  }
+
+  // Rush mode: reaching the Tepper destination lane wins the run.
+  function checkReachedDest() {
+    if (gameMode !== MODE.RUSH || gameState !== 'playing') return;
+    if (destZ !== null && playerZ <= destZ) triggerWin();
   }
 
   // ── Camera ─────────────────────────────────────────────────
@@ -1825,6 +1893,29 @@
     }, 16);
   }
 
+  // Rush mode: time ran out before reaching Tepper.
+  function triggerTimeout() {
+    if (gameState !== 'playing') return;
+    gameState = 'dead';
+    deathReason = 'timeout';
+    clearTimers();
+    stopTimer();
+    goReason.textContent = "You're late to class!";
+    setTimeout(showGameOver, 700);
+  }
+
+  // Rush mode: reached Tepper in time.
+  function triggerWin() {
+    if (gameState !== 'playing') return;
+    gameState = 'win';
+    clearTimers();
+    stopTimer();
+    playScore();
+    if (objectiveBanner) objectiveBanner.style.display = 'none';
+    if (timerPill) timerPill.classList.remove('urgent');
+    setTimeout(showLevelComplete, 500);
+  }
+
   function clearTimers() {
     if (drownTimer) { clearTimeout(drownTimer); drownTimer = null; }
     if (idleTimer)  { clearTimeout(idleTimer);  idleTimer  = null; }
@@ -1837,8 +1928,18 @@
     goScreen.style.display = 'flex';
   }
 
+  function showLevelComplete() {
+    if (lcTime)   lcTime.textContent   = formatTime(timeLeft);
+    if (lcScore)  lcScore.textContent  = score;
+    if (lcCoins)  lcCoins.textContent  = totalCoins;
+    if (lcReason) lcReason.textContent = 'You made it to class on time.';
+    lcScreen.style.display = 'flex';
+  }
+
   function resetIdleTimer() {
     if (idleTimer) clearTimeout(idleTimer);
+    // Rush mode uses the countdown as its pressure; no idle eagle.
+    if (gameMode === MODE.RUSH) return;
     idleTimer = setTimeout(() => {
       if (gameState === 'playing') triggerIdle();
     }, IDLE_TIMEOUT);
@@ -1896,19 +1997,53 @@
   }
 
   function setupScreenButtons() {
-    // Difficulty selector
     const diffHint = document.getElementById('diff-hint');
-    const hintText = { easy: 'Easy · slower hazards',
-                       medium: 'Medium · normal pace',
-                       hard: 'Hard · fast, frequent hazards' };
-    if (diffHint) diffHint.textContent = hintText[difficulty];
+    const modeHint = document.getElementById('mode-hint');
+
+    // Difficulty hint text depends on the selected mode: classic describes
+    // hazard pace, rush describes the time limit.
+    function diffHintText(diff) {
+      if (gameMode === MODE.RUSH) {
+        const t = DIFFICULTY[diff].rushTime;
+        const flavor = { easy: 'relaxed run', medium: 'steady pace', hard: 'sprint!' };
+        return DIFFICULTY[diff].label + ' · ' + t + 's to reach Tepper · ' + flavor[diff];
+      }
+      const classic = { easy: 'Easy · slower hazards',
+                        medium: 'Medium · normal pace',
+                        hard: 'Hard · fast, frequent hazards' };
+      return classic[diff];
+    }
+
+    function refreshDiffHint() {
+      if (diffHint) diffHint.textContent = diffHintText(difficulty);
+    }
+    refreshDiffHint();
+
+    // Mode selector
+    const modeHintText = {
+      classic: 'Classic · endless run, go as far as you can',
+      rush:    'Rush to Class · reach Tepper before time runs out',
+    };
+    if (modeHint) modeHint.textContent = modeHintText[gameMode];
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        gameMode = btn.dataset.mode;
+        if (modeHint) modeHint.textContent = modeHintText[gameMode];
+        refreshDiffHint();
+      });
+    });
+
+    // Difficulty selector
     document.querySelectorAll('.diff-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
         document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         difficulty = btn.dataset.diff;
-        if (diffHint) diffHint.textContent = hintText[difficulty];
+        refreshDiffHint();
       });
     });
 
@@ -1989,7 +2124,7 @@
       Object.values(coinMeshes).forEach(arr =>
         arr.forEach(c => { if (!c.collected) c.mesh.rotation.y = elapsed*3; })
       );
-    } else if (gameState === 'dead') {
+    } else if (gameState === 'dead' || gameState === 'win') {
       updateObstacles(dt);
       animateWater(elapsed);
     }

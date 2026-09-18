@@ -95,9 +95,29 @@
       background: rgba(220,0,0,0.88);
       animation: timerPulse 0.5s ease-in-out infinite alternate;
     }
+    #timer-pill.urgent #timer-display { color: #fff; }
     @keyframes timerPulse {
       from { transform: translateX(-50%) scale(1);    }
       to   { transform: translateX(-50%) scale(1.06); }
+    }
+
+    /* Rush-mode objective banner */
+    #objective-banner {
+      position: absolute;
+      top: 62px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(9px, 2vw, 13px);
+      color: var(--white);
+      background: rgba(196,18,48,0.82);
+      border: 2px solid rgba(255,180,180,0.45);
+      border-radius: 10px;
+      padding: 6px 16px;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.6);
+      white-space: nowrap;
     }
 
     /* Coins — right */
@@ -275,6 +295,32 @@
       text-align: center;
     }
 
+    /* ── Mode selector ── */
+    .mode-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .mode-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(8px, 1.7vw, 11px);
+      color: #fff;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 14px;
+      background: #63666a;
+      box-shadow: 0 5px 0 #3d3f42;
+      opacity: 0.72;
+      transition: transform 0.08s, box-shadow 0.08s, opacity 0.08s;
+    }
+    .mode-btn[data-mode="classic"] { background: #2980b9; box-shadow: 0 5px 0 #1c5980; }
+    .mode-btn[data-mode="rush"]    { background: var(--cmu-red); box-shadow: 0 5px 0 var(--cmu-red-d); }
+    .mode-btn.selected { opacity: 1; transform: translateY(-3px); }
+    .mode-btn[data-mode="classic"].selected { box-shadow: 0 8px 0 #1c5980, 0 12px 20px rgba(0,0,0,0.3); }
+    .mode-btn[data-mode="rush"].selected    { box-shadow: 0 8px 0 var(--cmu-red-d), 0 12px 20px rgba(0,0,0,0.3); }
+    .mode-btn:active { transform: translateY(3px) !important; }
+
     /* ── Difficulty selector ── */
     .diff-label {
       font-size: clamp(8px, 1.8vw, 11px);
@@ -448,6 +494,16 @@
     ═══════════════════════════════════════ */
     #levelcomplete-screen {
       background: linear-gradient(160deg, rgba(0,60,20,0.85) 0%, rgba(0,0,0,0.92) 100%);
+    }
+    #levelcomplete-screen .go-title {
+      color: #5dff6e;
+      text-shadow: 3px 3px 0 #1a7a42, 6px 6px 0 rgba(0,60,0,0.5);
+    }
+    #lc-reason {
+      font-size: clamp(7px, 1.6vw, 10px);
+      color: var(--cmu-gold);
+      letter-spacing: 1px;
+      margin-bottom: 28px;
     }
     .lc-title {
       font-size: clamp(16px, 4vw, 26px);
@@ -630,11 +686,18 @@
       <span id="score-icon">👟</span>
       <span id="score-display">0</span>
     </div>
+    <div class="hud-pill" id="timer-pill" style="display:none">
+      <span id="timer-icon">⏱️</span>
+      <span id="timer-display">1:00</span>
+    </div>
     <div class="hud-pill" id="coin-pill">
       <div class="coin-icon"></div>
       <span id="coin-display">0</span>
     </div>
   </div>
+
+  <!-- Rush-mode objective banner -->
+  <div id="objective-banner" style="display:none">GET TO TEPPER</div>
 
   <div id="hop-flash"></div>
 
@@ -646,7 +709,7 @@
         <div class="logo-depth" aria-hidden="true">CMU<br>CROSSY<br>ROAD</div>
         <div class="logo-front"><span class="cmu-word">CMU</span><br>CROSSY<br>ROAD</div>
       </div>
-      <div class="splash-subtitle">Endless dash across campus — how far can you go?</div>
+      <div class="splash-subtitle" id="splash-subtitle">Endless dash across campus — how far can you go?</div>
 
       <!-- Character selector -->
       <div class="char-select">
@@ -664,7 +727,14 @@
         </div>
       </div>
 
-      <div class="diff-label">SELECT DIFFICULTY</div>
+      <div class="diff-label">SELECT MODE</div>
+      <div class="mode-buttons">
+        <button class="mode-btn selected" data-mode="classic">CLASSIC</button>
+        <button class="mode-btn" data-mode="rush">RUSH TO CLASS</button>
+      </div>
+      <div class="diff-hint" id="mode-hint">Classic · endless run, go as far as you can</div>
+
+      <div class="diff-label" id="diff-label">SELECT DIFFICULTY</div>
       <div class="diff-buttons">
         <button class="diff-btn easy"   data-diff="easy">EASY</button>
         <button class="diff-btn medium selected" data-diff="medium">MED</button>
@@ -701,8 +771,25 @@
   </div>
 
   <!-- ── (Level-complete overlay kept in DOM but unused in endless mode) ── -->
-  <div class="overlay-screen" id="levelcomplete-screen" style="display:none">
-    <div class="go-card"></div>
+  <div class="overlay-screen win-screen" id="levelcomplete-screen" style="display:none">
+    <div class="go-title" id="lc-title">MADE IT TO TEPPER!</div>
+    <div id="lc-reason">You made it to class on time.</div>
+    <div class="go-card">
+      <div class="go-row">
+        <span class="go-label">TIME LEFT</span>
+        <span class="go-value green" id="lc-time">0:00</span>
+      </div>
+      <div class="go-divider"></div>
+      <div class="go-row">
+        <span class="go-label">STEPS</span>
+        <span class="go-value" id="lc-score">0</span>
+      </div>
+      <div class="go-divider"></div>
+      <div class="go-row">
+        <span class="go-label">COINS</span>
+        <span class="go-value gold" id="lc-coins">0</span>
+      </div>
+    </div>
     <button class="btn" id="nextlevel-btn">PLAY AGAIN</button>
   </div>
 
