@@ -69,7 +69,8 @@
     benchBrown  : 0x8B6914,
     benchMetal  : 0x7f8c8d,
     buildingWall: 0xd4c5a0,
-    buildingRoof: 0xc41230,   // CMU red roof
+    buildingRoof: 0x1a1a1a,   // black roof/top
+    windowBlue  : 0x3a7bd5,   // blue window glass
     signGreen   : 0x27ae60,
 
     // UI
@@ -77,61 +78,38 @@
     coin        : 0xFFD700,
   };
 
-  // ── Difficulty Config ──────────────────────────────────────
+  // ── Difficulty Config (endless — no time limit) ────────────
+  // Difficulty scales hazard speed/frequency only.
   const DIFFICULTY = {
-    easy:   { time: 90,  speedMult: 0.70, hazardMult: 0.70, label: 'EASY'   },
-    medium: { time: 60,  speedMult: 1.00, hazardMult: 1.00, label: 'MEDIUM' },
-    hard:   { time: 40,  speedMult: 1.45, hazardMult: 1.35, label: 'HARD'   },
+    easy:   { speedMult: 0.70, hazardMult: 0.70, label: 'EASY'   },
+    medium: { speedMult: 1.00, hazardMult: 1.00, label: 'MEDIUM' },
+    hard:   { speedMult: 1.40, hazardMult: 1.30, label: 'HARD'   },
   };
 
-  // ── Level 1 Lane Layout ────────────────────────────────────
-  // z goes negative (forward). Player starts at z=0.
-  // Each entry: { type, label, speed?, dir?, hazardType? }
-  // Destination zone is the last row. Total = ~28 rows forward.
-  const LEVEL1_LANES = [
-    // ── Start: Margaret Morrison steps ──
-    { type: LANE.SAFE,  label: 'Start – Margaret Morrison' },    // z=0
-    { type: LANE.GRASS, label: 'MM Lawn' },
-    { type: LANE.GRASS, label: 'MM Lawn' },
-    // ── First path crossing ──
-    { type: LANE.PATH,  label: 'Campus Walk', speed: 0.045, dir:  1 },
-    { type: LANE.PATH,  label: 'Campus Walk', speed: 0.038, dir: -1 },
-    // ── Grass quad ──
-    { type: LANE.GRASS, label: 'The Cut (lower)' },
-    { type: LANE.GRASS, label: 'The Cut (lower)' },
-    { type: LANE.GRASS, label: 'The Cut (lower)' },
-    // ── Forbes Ave crossing ──
-    { type: LANE.ROAD,  label: 'Forbes Ave',  speed: 0.07,  dir:  1 },
-    { type: LANE.ROAD,  label: 'Forbes Ave',  speed: 0.09,  dir: -1 },
-    { type: LANE.ROAD,  label: 'Forbes Ave',  speed: 0.06,  dir:  1 },
-    // ── Median / Sidewalk ──
-    { type: LANE.SAFE,  label: 'Forbes Median' },
-    // ── Frew St ──
-    { type: LANE.ROAD,  label: 'Frew St',     speed: 0.055, dir: -1 },
-    { type: LANE.ROAD,  label: 'Frew St',     speed: 0.07,  dir:  1 },
-    // ── Mid-campus grass ──
-    { type: LANE.GRASS, label: 'Mid Campus' },
-    { type: LANE.GRASS, label: 'Mid Campus' },
-    // ── Busy pedestrian crossing ──
-    { type: LANE.PATH,  label: 'Busy Walkway', speed: 0.055, dir:  1 },
-    { type: LANE.PATH,  label: 'Busy Walkway', speed: 0.065, dir: -1 },
-    { type: LANE.PATH,  label: 'Busy Walkway', speed: 0.048, dir:  1 },
-    // ── Upper campus grass ──
-    { type: LANE.GRASS, label: 'Upper Campus Lawn' },
-    { type: LANE.GRASS, label: 'Upper Campus Lawn' },
-    // ── Morewood Ave ──
-    { type: LANE.ROAD,  label: 'Morewood Ave', speed: 0.08,  dir: -1 },
-    { type: LANE.ROAD,  label: 'Morewood Ave', speed: 0.10,  dir:  1 },
-    // ── Final approach path ──
-    { type: LANE.PATH,  label: 'Tepper Approach', speed: 0.04, dir: -1 },
-    { type: LANE.GRASS, label: 'Tepper Lawn' },
-    { type: LANE.GRASS, label: 'Tepper Lawn' },
-    // ── Destination ──
-    { type: LANE.DEST,  label: 'Tepper School of Business' },   // z = -26
-  ];
+  // ── Infinite world streaming ───────────────────────────────
+  const ROWS_AHEAD  = 26;  // rows generated in front of the player
+  const ROWS_BEHIND = 8;   // rows kept behind before culling
 
-  // The destination z-index (negative)
-  const DEST_Z = -(LEVEL1_LANES.length - 1);
+  // CMU campus zone flavor labels for procedurally generated lanes
+  const CAMPUS_GRASS_LABELS = [
+    'The Cut', 'The Mall', 'CFA Lawn', 'MM Lawn',
+    'Science Quad', 'Wean Doherty', 'NSH Plaza', 'Tepper Lawn',
+  ];
+  const CAMPUS_ROAD_LABELS = ['Forbes Ave', 'Frew St', 'Morewood Ave', 'Tech St', 'Hamburg Way'];
+  const CAMPUS_PATH_LABELS = ['Campus Walk', 'Busy Walkway', 'Cut Path', 'Wean Walkway'];
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  // ── Character roster ───────────────────────────────────────
+  // Each id maps to a builder in buildPlayer(charId).
+  const CHARACTERS = [
+    { id: 'standard', name: 'CMU STUDENT',   blurb: 'Red hoodie, jeans, sneakers' },
+    { id: 'scs',      name: 'SCS STUDENT',   blurb: 'Tired. Headphones. Laptop.'  },
+    { id: 'drama',    name: 'DRAMA STUDENT',  blurb: 'Colorful & cheerful'         },
+    { id: 'business', name: 'BUSINESS STUDENT', blurb: 'Sharp formal attire'      },
+  ];
+  let selectedCharIndex = 0;
+  let selectedCharId = 'standard';
 
   // ── State ──────────────────────────────────────────────────
   let scene, camera, renderer, clock;
@@ -436,8 +414,12 @@
     tileMeshes[z] = group;
 
     // Decorations
-    if (lane.type === LANE.GRASS) buildGrassDecor(z, lane.label);
+    if (lane.type === LANE.GRASS) buildGrassDecor(z, lane.label, lane.flags, lane.buildings);
     if (lane.type === LANE.SAFE)  buildSafeDecor(z);
+    if (lane.type === LANE.PATH)  buildPathDecor(z);
+
+    // Safety: never let decor fully block a row — ensure a clear column
+    ensureClearPath(z);
 
     spawnCoinsForLane(z, lane.type);
   }
@@ -465,26 +447,78 @@
   }
 
   // ── Grass decorations ──────────────────────────────────────
-  function buildGrassDecor(z, label) {
+  function buildGrassDecor(z, label, laneFlags, laneBuildings) {
     if (decorMeshes[z]) return;
     decorMeshes[z] = [];
-    const isCut = label && label.includes('Cut');
 
-    for (let x = -HALF-1; x <= HALF+1; x++) {
-      // Fewer trees on The Cut, more on edges
-      const prob = isCut ? 0.12 : 0.18;
+    const isCut   = label && (label.includes('Cut') || label.includes('Mall'));
+    const isPlaza = label && (label.includes('Plaza') || label.includes('Wean') || label.includes('NSH'));
+
+    // ── Campus buildings as obstacles ──────────────────────
+    if (laneBuildings) {
+      // Place 1-2 campus buildings in the lane, off-center so player can pass
+      const style = Math.floor(Math.random() * 3);
+      const bldg = buildCampusBuilding(style);
+      // Place on one side of lane, leaving gap for player
+      const side = Math.random() < 0.5 ? 1 : -1;
+      const bx = side * (1 + Math.floor(Math.random() * 2)); // col 1–2 from center
+      bldg.position.set(bx * TILE, 0, z * TILE);
+      scene.add(bldg);
+      // Block the column occupied plus the adjacent one for wider buildings
+      const blockCols = style === 1 ? [bx - 1, bx, bx + 1] : [bx]; // wide=3, others=1
+      blockCols.forEach(bc => {
+        if (bc >= -HALF && bc <= HALF)
+          decorMeshes[z].push({ mesh: bldg, x: bc });
+      });
+
+      // Possibly a second smaller building on other side
+      if (Math.random() < 0.45) {
+        const style2 = 2; // small annex
+        const bldg2  = buildCampusBuilding(style2);
+        const bx2    = -side * (2 + Math.floor(Math.random() * 2));
+        bldg2.position.set(bx2 * TILE, 0, z * TILE);
+        scene.add(bldg2);
+        if (bx2 >= -HALF && bx2 <= HALF)
+          decorMeshes[z].push({ mesh: bldg2, x: bx2 });
+      }
+    }
+
+    // ── CMU Flag poles ──────────────────────────────────────
+    if (laneFlags) {
+      // Place 1-2 flag poles, preferring edges but sometimes mid-lane
+      const flagPositions = isCut
+        ? [-3, 3]            // both sides on the Cut
+        : [[-HALF + 1], [HALF - 1]][Math.floor(Math.random() * 2)]; // one side
+      (Array.isArray(flagPositions[0]) ? flagPositions[0] : flagPositions).forEach(fx => {
+        const fp = buildCMUFlagPole();
+        fp.position.set(fx * TILE, 0, z * TILE);
+        scene.add(fp);
+        decorMeshes[z].push({ mesh: fp, x: fx });
+      });
+    }
+
+    // ── Regular trees / bushes ──────────────────────────────
+    const usedX = new Set(decorMeshes[z].map(d => d.x));
+
+    for (let x = -HALF - 1; x <= HALF + 1; x++) {
+      if (usedX.has(x)) continue;
       if (Math.abs(x) <= 1 && z === 0) continue;
-      if (Math.random() < prob) {
+
+      const treeProb  = isCut ? 0.10 : isPlaza ? 0.08 : 0.16;
+      const benchProb = isPlaza ? 0.10 : 0.05;
+
+      if (Math.random() < treeProb) {
         const tree = buildTree();
-        tree.position.set(x*TILE, 0, z*TILE);
+        tree.position.set(x * TILE, 0, z * TILE);
         scene.add(tree);
         decorMeshes[z].push({ mesh: tree, x });
-      } else if (Math.random() < 0.06) {
-        // Occasional bench
+        usedX.add(x);
+      } else if (Math.random() < benchProb) {
         const bench = buildBench();
-        bench.position.set(x*TILE, 0, z*TILE);
+        bench.position.set(x * TILE, 0, z * TILE);
         scene.add(bench);
         decorMeshes[z].push({ mesh: bench, x });
+        usedX.add(x);
       }
     }
   }
@@ -492,15 +526,65 @@
   function buildSafeDecor(z) {
     if (decorMeshes[z]) return;
     decorMeshes[z] = [];
-    // Safe zones get low bushes along edges only
+    // Safe zones get low bushes + occasional CMU flag pole along edges
     [-HALF-1, -HALF, HALF, HALF+1].forEach(x => {
-      if (Math.random() < 0.5) {
+      if (Math.random() < 0.4) {
         const bush = buildBush();
         bush.position.set(x*TILE, 0, z*TILE);
         scene.add(bush);
         decorMeshes[z].push({ mesh: bush, x });
       }
     });
+    // One flag pole on a random edge slot (outside play area, decorative)
+    if (Math.random() < 0.5) {
+      const fx = Math.random() < 0.5 ? -HALF - 1 : HALF + 1;
+      const fp = buildCMUFlagPole();
+      fp.position.set(fx * TILE, 0, z * TILE);
+      scene.add(fp);
+      decorMeshes[z].push({ mesh: fp, x: fx });
+    }
+  }
+
+  // Flag poles line the pedestrian walkways (edge slots only, non-blocking)
+  function buildPathDecor(z) {
+    if (decorMeshes[z]) return;
+    decorMeshes[z] = [];
+    if (Math.random() < 0.6) {
+      const fx = Math.random() < 0.5 ? -HALF - 1 : HALF + 1;
+      const fp = buildCMUFlagPole();
+      fp.position.set(fx * TILE, 0, z * TILE);
+      scene.add(fp);
+      // edge slot beyond play area — do not add to blocking decor
+    }
+  }
+
+  // Guarantee at least 3 crossable columns in any row so the player
+  // can never be fully walled off by buildings/decor.
+  function ensureClearPath(z) {
+    const decors = decorMeshes[z];
+    if (!decors || decors.length === 0) return;
+    const blocked = new Set(
+      decors.filter(d => d.x >= -HALF && d.x <= HALF).map(d => d.x)
+    );
+    const clearCount = (COLS) - blocked.size;
+    if (clearCount >= 3) return;
+    // Remove decor from center columns until at least 3 clear.
+    // Buildings span multiple decor entries sharing one mesh — remove them all.
+    const centerOrder = [0, 1, -1, 2, -2, 3, -3];
+    for (const cx of centerOrder) {
+      if ((COLS - blocked.size) >= 3) break;
+      const entry = decors.find(d => d.x === cx);
+      if (!entry) continue;
+      const sharedMesh = entry.mesh;
+      scene.remove(sharedMesh);
+      // Remove every decor entry that used this mesh (whole building)
+      for (let i = decors.length - 1; i >= 0; i--) {
+        if (decors[i].mesh === sharedMesh) {
+          blocked.delete(decors[i].x);
+          decors.splice(i, 1);
+        }
+      }
+    }
   }
 
   function buildTree() {
@@ -540,25 +624,261 @@
     return g;
   }
 
+  // ── Arched window: square base + semi-oval top, blue glass ──
+  function buildArchWindow(w, hBase, depth) {
+    const g = new THREE.Group();
+    const glassMat = new THREE.MeshLambertMaterial({ color: COL.windowBlue });
+    const frameMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+
+    // Square base
+    const base = new THREE.Mesh(new THREE.BoxGeometry(w, hBase, depth), glassMat);
+    base.position.y = 0;
+    g.add(base);
+
+    // Semi-oval (half-cylinder) arch top sitting on the square
+    const archR = w / 2;
+    const arch = new THREE.Mesh(
+      new THREE.CylinderGeometry(archR, archR, depth, 12, 1, false, 0, Math.PI),
+      glassMat
+    );
+    // Rotate so the flat side faces down, dome faces up, extruded along Z
+    arch.rotation.z = -Math.PI / 2;
+    arch.rotation.y = Math.PI / 2;
+    arch.position.set(0, hBase / 2, 0);
+    g.add(arch);
+
+    // Thin white frame outline around the square base
+    const frameGeoV = new THREE.BoxGeometry(0.02, hBase, depth + 0.005);
+    [-w/2, w/2].forEach(fx => {
+      const f = new THREE.Mesh(frameGeoV, frameMat);
+      f.position.set(fx, 0, 0);
+      g.add(f);
+    });
+    const sill = new THREE.Mesh(new THREE.BoxGeometry(w + 0.04, 0.03, depth + 0.005), frameMat);
+    sill.position.set(0, -hBase / 2, 0);
+    g.add(sill);
+
+    return g;
+  }
+
+  // ── CMU signage panel (red board with white "CMU") ─────────
+  function buildCMUSign(scale) {
+    scale = scale || 1;
+    const g = new THREE.Group();
+    // Red board
+    const board = box(0.62 * scale, 0.26 * scale, 0.05, COL.cmuRed);
+    board.castShadow = true;
+    g.add(board);
+    // Gold border trim
+    const trim = box(0.66 * scale, 0.30 * scale, 0.03, COL.cmuGold);
+    trim.position.z = -0.015;
+    g.add(trim);
+    // White "CMU" letter blocks
+    const textMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    [-0.16, 0, 0.16].forEach(lx => {
+      const letter = new THREE.Mesh(
+        new THREE.BoxGeometry(0.09 * scale, 0.13 * scale, 0.03), textMat);
+      letter.position.set(lx * scale, 0, 0.03);
+      g.add(letter);
+    });
+    return g;
+  }
+
+  // ── Rooftop CMU flag (pole + waving red banner) ────────────
+  function buildRoofFlag() {
+    const g = new THREE.Group();
+    const pole = box(0.04, 0.6, 0.04, 0x555555);
+    pole.position.y = 0.3;
+    g.add(pole);
+    const flag = box(0.30, 0.20, 0.03, COL.cmuRed);
+    flag.position.set(0.17, 0.5, 0);
+    flag.castShadow = true;
+    g.add(flag);
+    // gold stripe on flag
+    const stripe = box(0.30, 0.04, 0.035, COL.cmuGold);
+    stripe.position.set(0.17, 0.41, 0);
+    g.add(stripe);
+    return g;
+  }
+
+  // ── CMU Flag Pole (lamp-post with red CMU banner) ─────────
+  function buildCMUFlagPole() {
+    const g = new THREE.Group();
+
+    // Lamp post pole
+    const pole = box(0.07, 1.8, 0.07, 0x4a4a4a);
+    pole.position.y = 0.9;
+    pole.castShadow = true;
+    g.add(pole);
+
+    // Lamp head
+    const lamp = box(0.22, 0.1, 0.22, 0x2c2c2c);
+    lamp.position.y = 1.82;
+    g.add(lamp);
+    const bulb = new THREE.Mesh(
+      new THREE.SphereGeometry(0.07, 6, 6),
+      new THREE.MeshLambertMaterial({ color: 0xfff5cc })
+    );
+    bulb.position.y = 1.76;
+    g.add(bulb);
+
+    // CMU red banner flag hanging from pole
+    const bannerMat = new THREE.MeshLambertMaterial({ color: COL.cmuRed });
+    const banner = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.52, 0.04), bannerMat);
+    banner.position.set(0.18, 1.42, 0);
+    banner.castShadow = true;
+    g.add(banner);
+
+    // White "CMU" block letters on banner
+    const textMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    // C
+    const c = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.05), textMat);
+    c.position.set(0.12, 1.50, 0);
+    g.add(c);
+    // M
+    const m = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.05), textMat);
+    m.position.set(0.18, 1.50, 0);
+    g.add(m);
+    // U
+    const u = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.05), textMat);
+    u.position.set(0.24, 1.50, 0);
+    g.add(u);
+
+    // Gold bottom trim on banner
+    const trim = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.04, 0.05),
+      new THREE.MeshLambertMaterial({ color: COL.cmuGold }));
+    trim.position.set(0.18, 1.17, 0);
+    g.add(trim);
+
+    addShadowBlob(g, 0.1, 0.1);
+    return g;
+  }
+
+  // ── Campus building obstacle (in-lane, player walks around) ──
+  // Returns { mesh, blockedXSlots[] } so the decor system can
+  // mark which column slots are impassable.
+  function buildCampusBuilding(style) {
+    // style: 0 = tall academic (Baker-like), 1 = wide modern (Wean-like),
+    //        2 = small annex (NSH-like)
+    // All styles: blue arched windows, black roof/top, CMU signage + rooftop flag.
+    const g = new THREE.Group();
+    const s = style % 3;
+    const FRONT_Z = -0.36; // window face
+
+    if (s === 0) {
+      // Tall sandstone academic building (Baker Hall style)
+      const body = box(1.6, 1.4, 0.7, 0xd9c99a);
+      body.position.y = 0.7; body.castShadow = true; g.add(body);
+      // Black flat roof top
+      const roof = box(1.68, 0.24, 0.78, COL.buildingRoof);
+      roof.position.y = 1.52; g.add(roof);
+      const parapet = box(1.7, 0.08, 0.8, 0x000000);
+      parapet.position.y = 1.66; g.add(parapet);
+
+      // Blue arched windows (2 floors × 3)
+      for (let row = 0; row < 2; row++) {
+        for (let col = -1; col <= 1; col++) {
+          const win = buildArchWindow(0.24, 0.26, 0.06);
+          win.position.set(col * 0.5, 0.44 + row * 0.56, FRONT_Z);
+          g.add(win);
+        }
+      }
+      // Entry door
+      const door = box(0.28, 0.44, 0.09, 0x3d2b1f);
+      door.position.set(0, 0.22, -0.37); g.add(door);
+      const doorArch = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.14, 0.14, 0.09, 12, 1, false, 0, Math.PI),
+        new THREE.MeshLambertMaterial({ color: COL.cmuRed }));
+      doorArch.rotation.z = -Math.PI/2; doorArch.rotation.y = Math.PI/2;
+      doorArch.position.set(0, 0.44, -0.38); g.add(doorArch);
+
+      // CMU signage above the door
+      const sign = buildCMUSign(1.0);
+      sign.position.set(0, 1.02, -0.37); g.add(sign);
+      // Rooftop flag
+      const flag = buildRoofFlag();
+      flag.position.set(-0.55, 1.66, 0); g.add(flag);
+
+    } else if (s === 1) {
+      // Wide modern building (Wean/GHC style) – gray concrete
+      const body = box(2.2, 1.0, 0.65, 0xb8b8b8);
+      body.position.y = 0.5; body.castShadow = true; g.add(body);
+      const topFloor = box(2.2, 0.35, 0.65, 0xa0a0a0);
+      topFloor.position.y = 1.17; g.add(topFloor);
+      // Black roof parapet/top
+      const roof = box(2.26, 0.16, 0.7, COL.buildingRoof);
+      roof.position.y = 1.42; g.add(roof);
+
+      // Blue arched window grid (2 rows × 5)
+      for (let row = 0; row < 2; row++) {
+        for (let col = -2; col <= 2; col++) {
+          const win = buildArchWindow(0.2, 0.2, 0.05);
+          win.position.set(col * 0.4, 0.4 + row * 0.44, -0.335);
+          g.add(win);
+        }
+      }
+      // CMU signage panel (large, on the facade)
+      const sign = buildCMUSign(1.3);
+      sign.position.set(-0.6, 0.82, -0.34); g.add(sign);
+      // Rooftop flag
+      const flag = buildRoofFlag();
+      flag.position.set(0.7, 1.5, 0); g.add(flag);
+
+    } else {
+      // Small annex / NSH-style brick box
+      const body = box(1.1, 0.9, 0.55, 0xc49a6c);
+      body.position.y = 0.45; body.castShadow = true; g.add(body);
+      // Black flat roof
+      const roof = box(1.16, 0.14, 0.6, COL.buildingRoof);
+      roof.position.y = 0.96; g.add(roof);
+
+      // Blue arched windows (1 row × 3)
+      for (let col = -1; col <= 1; col++) {
+        const win = buildArchWindow(0.2, 0.24, 0.06);
+        win.position.set(col * 0.36, 0.52, -0.29);
+        g.add(win);
+      }
+      // CMU signage
+      const sign = buildCMUSign(0.85);
+      sign.position.set(0, 0.14, -0.29); g.add(sign);
+      // Rooftop flag
+      const flag = buildRoofFlag();
+      flag.position.set(0.42, 1.03, 0); g.add(flag);
+    }
+
+    addShadowBlob(g, 1.8, 0.72);
+    return g;
+  }
+
   // ── Campus building facades (edge decor) ───────────────────
   function buildBuildingFacade(side) {
-    // 'side' = 1 (right) or -1 (left), placed well outside HALF
     const g = new THREE.Group();
     const h = 1.2 + Math.random() * 0.8;
     const w = 1.5 + Math.random() * 0.8;
     const wall = box(w, h, 0.6, COL.buildingWall);
     wall.position.y = h / 2; wall.castShadow = true; g.add(wall);
-    const roof = box(w + 0.1, 0.2, 0.7, COL.buildingRoof);
-    roof.position.y = h + 0.1; g.add(roof);
-    // Windows
-    const winMat = new THREE.MeshLambertMaterial({ color: 0x87ceeb });
-    for (let wy = 0; wy < Math.floor(h); wy++) {
+    // Black roof/top
+    const roof = box(w + 0.12, 0.22, 0.72, COL.buildingRoof);
+    roof.position.y = h + 0.11; g.add(roof);
+
+    // Blue arched windows
+    const floors = Math.floor(h);
+    for (let wy = 0; wy < floors; wy++) {
       for (let wx = -1; wx <= 1; wx++) {
-        const win = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.22, 0.08), winMat);
-        win.position.set(wx * 0.42, 0.4 + wy * 0.5, -0.28);
+        const win = buildArchWindow(0.2, 0.2, 0.06);
+        win.position.set(wx * 0.42, 0.42 + wy * 0.5, -0.30);
         g.add(win);
       }
     }
+
+    // CMU signage on the facade
+    const sign = buildCMUSign(1.0);
+    sign.position.set(0, 0.24, -0.31); g.add(sign);
+
+    // Rooftop CMU flag
+    const flag = buildRoofFlag();
+    flag.position.set(side * (w/2 - 0.25), h + 0.2, 0); g.add(flag);
+
     return g;
   }
 
@@ -573,9 +893,10 @@
     roof.position.y = 0.76; g.add(roof);
     // Windows strip
     const winMat = new THREE.MeshLambertMaterial({ color: 0x1a2a3a });
-    const winStrip = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.26, 0.08), winMat);
-    winStrip.position.set(0, 0.52, 0.36); g.add(winStrip);
-    winStrip.clone().position.set(0, 0.52, -0.36); g.add(winStrip.clone());
+    const winStrip1 = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.26, 0.08), winMat);
+    winStrip1.position.set(0, 0.52, 0.36); g.add(winStrip1);
+    const winStrip2 = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.26, 0.08), winMat);
+    winStrip2.position.set(0, 0.52, -0.36); g.add(winStrip2);
     // Wheels (4 pairs)
     const wheelMat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
     const wheelGeo = new THREE.CylinderGeometry(0.14, 0.14, 0.14, 8);
@@ -633,7 +954,6 @@
     // Wheels
     const wGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.07, 10);
     const wMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
-    const rimMat = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
     [-0.26, 0.26].forEach(xOff => {
       const w = new THREE.Mesh(wGeo, wMat);
       w.rotation.z = Math.PI / 2;
@@ -713,64 +1033,181 @@
   }
 
   // ── CMU Student player ────────────────────────────────────
-  function buildPlayer() {
-    const g = new THREE.Group();
+  // Dispatcher: builds the chosen character mesh.
+  function buildPlayer(charId) {
+    switch (charId) {
+      case 'scs':      return buildSCSStudent();
+      case 'drama':    return buildDramaStudent();
+      case 'business': return buildBusinessStudent();
+      case 'standard':
+      default:         return buildStandardStudent();
+    }
+  }
 
-    // Torso (CMU red hoodie)
-    const torso = box(0.44, 0.40, 0.36, COL.studentShirt);
-    torso.position.y = 0.30; torso.castShadow = true; g.add(torso);
-
-    // Hoodie pocket detail
-    const pocket = box(0.20, 0.10, 0.04, 0xa00020);
-    pocket.position.set(0, 0.24, 0.18); g.add(pocket);
-
-    // Head
-    const head = box(0.34, 0.32, 0.30, COL.studentSkin);
+  // Shared helpers so all characters share proportions.
+  function addHead(g, skin, hairColor, hairH) {
+    const head = box(0.34, 0.32, 0.30, skin);
     head.position.set(0.04, 0.64, 0); head.castShadow = true; g.add(head);
-
-    // Hair
-    const hair = box(0.36, 0.12, 0.32, COL.studentHair);
-    hair.position.set(0.02, 0.82, 0); g.add(hair);
-
-    // Eyes
+    if (hairColor !== null) {
+      const hair = box(0.36, hairH || 0.12, 0.32, hairColor);
+      hair.position.set(0.02, 0.76 + (hairH || 0.12) / 2, 0); g.add(hair);
+    }
     const eyeMat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
     [-0.08, 0.08].forEach(bz => {
       const eye = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.06), eyeMat);
       eye.position.set(0.17, 0.65, bz); g.add(eye);
     });
+    return head;
+  }
 
-    // Backpack (blue)
-    const bag = box(0.30, 0.34, 0.14, COL.backpack);
-    bag.position.set(-0.04, 0.32, -0.24); bag.castShadow = true; g.add(bag);
-    // Bag strap
-    const strap = box(0.06, 0.38, 0.04, 0x1a6ea8);
-    strap.position.set(0.06, 0.34, -0.14); g.add(strap);
-
-    // Arms
-    [[0.24, -0.16], [0.24, 0.16]].forEach(([y, bz], i) => {
-      const arm = box(0.12, 0.30, 0.12, COL.studentShirt);
-      arm.position.set(i===0?0.26:-0.26, y, 0);
-      arm.rotation.z = bz; g.add(arm);
-    });
-
-    // Pants
-    const pants = box(0.40, 0.28, 0.32, COL.studentPants);
+  function addLegs(g, pantsColor, shoeColor) {
+    const pants = box(0.40, 0.28, 0.32, pantsColor);
     pants.position.y = 0.06; g.add(pants);
-
-    // Shoes
     [[-0.10, -0.02], [0.10, -0.02]].forEach(([x, bz]) => {
-      const shoe = box(0.14, 0.08, 0.20, COL.studentShoes);
+      const shoe = box(0.14, 0.08, 0.20, shoeColor);
       shoe.position.set(x, -0.08, bz); g.add(shoe);
     });
+  }
 
-    // CMU text on shirt (tiny C-M-U blocks)
-    const cmuMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
-    [-0.06, 0, 0.06].forEach((bz, i) => {
-      const letter = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.08, 0.04), cmuMat);
-      letter.position.set(0.19, 0.34, bz); g.add(letter);
+  function addArms(g, sleeveColor, raised) {
+    [[0.24, -0.16], [0.24, 0.16]].forEach(([y, bz], i) => {
+      const arm = box(0.12, 0.30, 0.12, sleeveColor);
+      arm.position.set(i===0?0.26:-0.26, y, 0);
+      arm.rotation.z = bz + (raised ? (i===0? -0.5 : 0.5) : 0);
+      arm.castShadow = true;
+      g.add(arm);
     });
+  }
 
+  function addBackpack(g, bagColor, strapColor) {
+    const bag = box(0.30, 0.34, 0.14, bagColor);
+    bag.position.set(-0.04, 0.32, -0.24); bag.castShadow = true; g.add(bag);
+    const strap = box(0.06, 0.38, 0.04, strapColor);
+    strap.position.set(0.06, 0.34, -0.14); g.add(strap);
+  }
+
+  // ── 1. Standard CMU student — red hoodie, jeans, white sneakers
+  function buildStandardStudent() {
+    const g = new THREE.Group();
+    const torso = box(0.44, 0.40, 0.36, COL.studentShirt);
+    torso.position.y = 0.30; torso.castShadow = true; g.add(torso);
+    // Hoodie pocket
+    const pocket = box(0.20, 0.10, 0.04, 0xa00020);
+    pocket.position.set(0, 0.24, 0.18); g.add(pocket);
+    addHead(g, COL.studentSkin, COL.studentHair, 0.12);
+    addBackpack(g, COL.backpack, 0x1a6ea8);
+    addArms(g, COL.studentShirt, false);
+    addLegs(g, 0x3a5a8c /* blue jeans */, 0xffffff /* white sneakers */);
+    // White "CMU" letters on chest
+    const cmuMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    [-0.06, 0, 0.06].forEach(bz => {
+      const l = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.08, 0.04), cmuMat);
+      l.position.set(0.19, 0.34, bz); g.add(l);
+    });
     addShadowBlob(g, 0.48, 0.36);
+    return g;
+  }
+
+  // ── 2. Tired SCS student — headphones, laptop, slumped, hoodie
+  function buildSCSStudent() {
+    const g = new THREE.Group();
+    // Dark gray hoodie
+    const torso = box(0.44, 0.40, 0.36, 0x40454d);
+    torso.position.y = 0.30; torso.castShadow = true; g.add(torso);
+    const head = addHead(g, COL.studentSkin, 0x2b2b2b, 0.11);
+    // Slight forward slump: tilt whole body
+    // Tired eyes — add small dark "eye bag" shadow blocks
+    const bagMat = new THREE.MeshLambertMaterial({ color: 0xcaa38a });
+    [-0.08, 0.08].forEach(bz => {
+      const b = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.03, 0.05), bagMat);
+      b.position.set(0.17, 0.60, bz); g.add(b);
+    });
+    // Headphones — band over head + two ear cups
+    const band = box(0.40, 0.06, 0.10, 0x222222);
+    band.position.set(0.02, 0.86, 0); g.add(band);
+    [-0.17, 0.17].forEach(bz => {
+      const cup = box(0.10, 0.14, 0.10, 0xe74c3c);
+      cup.position.set(0.04, 0.66, bz); g.add(cup);
+    });
+    addBackpack(g, 0x2c3e50, 0x1b2733);
+    // Arms forward holding a laptop
+    [[0.30, -0.16], [0.30, 0.16]].forEach(([y, bz], i) => {
+      const arm = box(0.12, 0.26, 0.12, 0x40454d);
+      arm.position.set(i===0?0.24:-0.24, y, 0.08);
+      arm.rotation.x = -0.9; arm.castShadow = true; g.add(arm);
+    });
+    // Laptop held in front
+    const laptopBase = box(0.34, 0.03, 0.24, 0xbdc3c7);
+    laptopBase.position.set(0, 0.34, 0.26); g.add(laptopBase);
+    const laptopScreen = box(0.34, 0.24, 0.03, 0x2c3e50);
+    laptopScreen.position.set(0, 0.46, 0.36); laptopScreen.rotation.x = 0.3; g.add(laptopScreen);
+    const glow = box(0.28, 0.18, 0.01, 0x5dade2);
+    glow.position.set(0, 0.46, 0.345); glow.rotation.x = 0.3; g.add(glow);
+    addLegs(g, 0x2c3e50 /* sweatpants */, 0x555555 /* worn shoes */);
+    addShadowBlob(g, 0.48, 0.4);
+    // Slump the whole character slightly forward
+    g.rotation.x = 0.06;
+    return g;
+  }
+
+  // ── 3. Drama student — colorful clothes + hair, cheerful
+  function buildDramaStudent() {
+    const g = new THREE.Group();
+    // Bright magenta/teal outfit
+    const torso = box(0.44, 0.40, 0.36, 0xe84393);
+    torso.position.y = 0.30; torso.castShadow = true; g.add(torso);
+    // Colorful scarf detail
+    const scarf = box(0.46, 0.08, 0.38, 0x00cec9);
+    scarf.position.set(0, 0.48, 0); g.add(scarf);
+    // Head with bright colorful hair (taller, layered)
+    addHead(g, COL.studentSkin, null, 0);
+    const hairColors = [0x9b59b6, 0x1abc9c, 0xf1c40f];
+    hairColors.forEach((hc, i) => {
+      const hair = box(0.38 - i*0.06, 0.12, 0.34 - i*0.06, hc);
+      hair.position.set(0.02, 0.80 + i*0.10, 0); g.add(hair);
+    });
+    // Big cheerful smile block
+    const smile = box(0.12, 0.03, 0.05, 0x7a2b2b);
+    smile.position.set(0.17, 0.56, 0); g.add(smile);
+    // Colorful bag
+    addBackpack(g, 0xf39c12, 0xe74c3c);
+    // Arms raised cheerfully
+    addArms(g, 0xe84393, true);
+    // Rainbow-ish legs
+    addLegs(g, 0x6c5ce7 /* purple pants */, 0xffeaa7 /* yellow shoes */);
+    addShadowBlob(g, 0.48, 0.36);
+    return g;
+  }
+
+  // ── 4. Business student — formal suit, tie, briefcase
+  function buildBusinessStudent() {
+    const g = new THREE.Group();
+    // Navy suit jacket
+    const torso = box(0.44, 0.40, 0.36, 0x2c3e50);
+    torso.position.y = 0.30; torso.castShadow = true; g.add(torso);
+    // White dress shirt V
+    const shirt = box(0.14, 0.34, 0.06, 0xffffff);
+    shirt.position.set(0, 0.30, 0.17); g.add(shirt);
+    // Red tie
+    const tie = box(0.05, 0.24, 0.03, COL.cmuRed);
+    tie.position.set(0, 0.28, 0.20); g.add(tie);
+    // Lapels
+    [-0.09, 0.09].forEach(bx => {
+      const lap = box(0.05, 0.22, 0.05, 0x1f2d3d);
+      lap.position.set(bx, 0.34, 0.17); g.add(lap);
+    });
+    addHead(g, COL.studentSkin, 0x2b1d12, 0.10);
+    // Neat side-part highlight
+    addArms(g, 0x2c3e50, false);
+    addLegs(g, 0x1f2d3d /* suit pants */, 0x2b1d12 /* dress shoes */);
+    // Briefcase in right hand
+    const armR = box(0.12, 0.30, 0.12, 0x2c3e50);
+    armR.position.set(0.30, 0.22, 0); armR.castShadow = true; g.add(armR);
+    const brief = box(0.22, 0.16, 0.08, 0x5a3a1a);
+    brief.position.set(0.34, 0.06, 0); brief.castShadow = true; g.add(brief);
+    const handle = box(0.10, 0.04, 0.02, 0x2b1d12);
+    handle.position.set(0.34, 0.15, 0); g.add(handle);
+    addShadowBlob(g, 0.5, 0.36);
     return g;
   }
 
@@ -941,55 +1378,67 @@
     } catch(e) {}
   }
 
-  // ── Timer ──────────────────────────────────────────────────
-  function startTimer() {
-    stopTimer();
-    const cfg = DIFFICULTY[difficulty];
-    timeLeft = cfg.time;
-    timerEl.textContent = timeLeft + 's';
-    timerPill.classList.remove('urgent');
-
-    timerInterval = setInterval(() => {
-      if (gameState !== 'playing') { stopTimer(); return; }
-      timeLeft--;
-      timerEl.textContent = timeLeft + 's';
-      if (timeLeft <= 10) timerPill.classList.add('urgent');
-      if (timeLeft <= 0) {
-        stopTimer();
-        triggerTimeout();
-      }
-    }, 1000);
-  }
-
+  // (Endless mode — no countdown timer.)
   function stopTimer() {
     if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   }
 
-  // ── Level layout – world generation ───────────────────────
-  function buildLevelWorld() {
-    // Build every lane in LEVEL1_LANES
-    LEVEL1_LANES.forEach((def, idx) => {
-      const z = -idx; // z=0 start, z=-1, z=-2… forward
-      const lane = makeLaneFromDef(def, z);
-      lanes.push(lane);
-      buildTile(lane);
-      populateLane(lane);
-    });
+  // ── Infinite procedural world generation ──────────────────
+  // Tracks how far forward we've generated and the last lane type
+  // to avoid awkward runs (e.g. too many roads back-to-back).
+  let genZ = 0;             // most-forward generated z (negative)
+  let lastType = LANE.SAFE;
+  let sameTypeRun = 0;
 
-    // Add building facades on sides at regular intervals
-    for (let z = 0; z >= DEST_Z; z--) {
-      if (z % 3 === 0) {
-        const facadeR = buildBuildingFacade(1);
-        facadeR.position.set((HALF+2)*TILE + 0.6, 0, z*TILE);
-        scene.add(facadeR);
-        facadeMeshes.push(facadeR);
+  // Build a lane definition for a given z based on simple rules.
+  function generateLaneDef(z) {
+    // First few rows are always safe/grass so the player has a beat to start
+    if (z === 0)  return { type: LANE.SAFE,  label: 'Start' };
+    if (z >= -2)  return { type: LANE.GRASS, label: pick(CAMPUS_GRASS_LABELS),
+                           flags: Math.random() < 0.4 };
 
-        const facadeL = buildBuildingFacade(-1);
-        facadeL.position.set(-(HALF+2)*TILE - 0.6, 0, z*TILE);
-        scene.add(facadeL);
-        facadeMeshes.push(facadeL);
-      }
+    // Weighted random with anti-repeat pressure
+    let roll = Math.random();
+    let type;
+    if (sameTypeRun >= 3) {
+      // Force a change after 3 of the same
+      const options = [LANE.GRASS, LANE.ROAD, LANE.PATH].filter(t => t !== lastType);
+      type = pick(options);
+    } else {
+      if      (roll < 0.34) type = LANE.ROAD;
+      else if (roll < 0.60) type = LANE.PATH;
+      else if (roll < 0.94) type = LANE.GRASS;
+      else                  type = LANE.SAFE;
     }
+
+    if (type === lastType) sameTypeRun++; else sameTypeRun = 0;
+    lastType = type;
+
+    // Difficulty-independent base speeds (multiplier applied later)
+    if (type === LANE.ROAD) {
+      return {
+        type, label: pick(CAMPUS_ROAD_LABELS),
+        speed: 0.05 + Math.random() * 0.06,
+        dir: Math.random() < 0.5 ? 1 : -1,
+      };
+    }
+    if (type === LANE.PATH) {
+      return {
+        type, label: pick(CAMPUS_PATH_LABELS),
+        speed: 0.038 + Math.random() * 0.032,
+        dir: Math.random() < 0.5 ? 1 : -1,
+      };
+    }
+    if (type === LANE.SAFE) {
+      return { type, label: 'Quad' };
+    }
+    // GRASS — occasionally with buildings or flags
+    return {
+      type: LANE.GRASS,
+      label: pick(CAMPUS_GRASS_LABELS),
+      buildings: Math.random() < 0.32,
+      flags: Math.random() < 0.4,
+    };
   }
 
   function makeLaneFromDef(def, z) {
@@ -1004,7 +1453,89 @@
       speed,
       baseSpeed: def.speed || 0,
       dir: def.dir || 1,
+      flags: !!def.flags,
+      buildings: !!def.buildings,
     };
+  }
+
+  // Add one lane (tile + obstacles + optional facades) at z.
+  function spawnLane(z) {
+    if (tileMeshes[z]) return;
+    const def  = generateLaneDef(z);
+    const lane = makeLaneFromDef(def, z);
+    lanes.push(lane);
+    buildTile(lane);
+    populateLane(lane);
+
+    // Building facades along the edges every few rows
+    if (z % 3 === 0 && z <= 0) {
+      const facadeR = buildBuildingFacade(1);
+      facadeR.position.set((HALF+2)*TILE + 0.6, 0, z*TILE);
+      scene.add(facadeR);
+      facadeMeshes.push(facadeR);
+      const facadeL = buildBuildingFacade(-1);
+      facadeL.position.set(-(HALF+2)*TILE - 0.6, 0, z*TILE);
+      scene.add(facadeL);
+      facadeMeshes.push(facadeL);
+    }
+  }
+
+  // Generate initial world and reset the streaming cursor.
+  function buildLevelWorld() {
+    genZ = 0;
+    lastType = LANE.SAFE;
+    sameTypeRun = 0;
+    for (let z = 0; z >= -ROWS_AHEAD; z--) {
+      spawnLane(z);
+      genZ = z;
+    }
+  }
+
+  // Ensure the world extends far enough ahead of the player and
+  // cull lanes/decor/obstacles that are far behind.
+  function streamWorld() {
+    // Extend ahead
+    const needTo = playerZ - ROWS_AHEAD;
+    while (genZ > needTo) {
+      genZ--;
+      spawnLane(genZ);
+    }
+    // Cull behind (z greater than player + ROWS_BEHIND)
+    const cullZ = playerZ + ROWS_BEHIND;
+    lanes = lanes.filter(lane => {
+      if (lane.z > cullZ) {
+        cullLane(lane.z);
+        return false;
+      }
+      return true;
+    });
+  }
+
+  function cullLane(z) {
+    if (tileMeshes[z]) { scene.remove(tileMeshes[z]); delete tileMeshes[z]; }
+    if (decorMeshes[z]) {
+      // De-dupe shared building meshes before removing
+      const removed = new Set();
+      decorMeshes[z].forEach(d => {
+        if (!removed.has(d.mesh)) { scene.remove(d.mesh); removed.add(d.mesh); }
+      });
+      delete decorMeshes[z];
+    }
+    if (coinMeshes[z]) {
+      coinMeshes[z].forEach(c => scene.remove(c.mesh));
+      delete coinMeshes[z];
+    }
+    // Obstacles/logs for this lane
+    const lane = lanes.find(l => l.z === z);
+    if (lane) {
+      lane.obstacles.forEach(o => scene.remove(o.mesh));
+      lane.logs.forEach(l => scene.remove(l.mesh));
+    }
+    // Facades at this z
+    facadeMeshes = facadeMeshes.filter(f => {
+      if (Math.round(f.position.z / TILE) === z) { scene.remove(f); return false; }
+      return true;
+    });
   }
 
   // ── Game init ─────────────────────────────────────────────
@@ -1023,22 +1554,17 @@
 
     scoreEl.textContent = '0';
     coinEl.textContent  = '0';
-    timerPill.classList.remove('urgent');
-    const cfg = DIFFICULTY[difficulty];
-    timerEl.textContent = cfg.time + 's';
 
     buildLevelWorld();
 
     playerGroup = new THREE.Group();
-    playerMesh  = buildPlayer();
+    playerMesh  = buildPlayer(selectedCharId);
     playerGroup.add(playerMesh);
     playerGroup.position.set(0, 0, 0);
     scene.add(playerGroup);
 
     positionCamera(0);
-    startTimer();
     resetIdleTimer();
-    showLevelLabel();
   }
 
   function clearWorld() {
@@ -1061,20 +1587,6 @@
     obstacleMeshes = []; logMeshes = []; facadeMeshes = []; lanes = [];
   }
 
-  function showLevelLabel() {
-    levelLabel.style.display = 'block';
-    levelLabel.style.opacity = '1';
-    setTimeout(() => {
-      levelLabel.style.transition = 'opacity 0.8s';
-      levelLabel.style.opacity = '0';
-      setTimeout(() => {
-        levelLabel.style.display = 'none';
-        levelLabel.style.transition = '';
-        levelLabel.style.opacity = '1';
-      }, 800);
-    }, 2000);
-  }
-
   // ── Movement ──────────────────────────────────────────────
   function queueHop(dx, dz) {
     if (gameState !== 'playing') return;
@@ -1090,8 +1602,8 @@
 
     // Boundaries
     if (newX < -HALF || newX > HALF) return;
-    if (newZ > 2) return; // can't go too far backward
-    if (newZ < DEST_Z) return; // can't go past destination
+    // Can't back up more than a few rows behind furthest progress
+    if (newZ > maxZ + 3) return;
 
     // Block on decor
     const decors = decorMeshes[newZ] || [];
@@ -1150,32 +1662,8 @@
 
       checkCollisions();
       checkCoinCollect();
-      checkDestination();
+      streamWorld();  // extend/cull the infinite world after each hop
     }
-  }
-
-  // ── Level complete detection ───────────────────────────────
-  function checkDestination() {
-    if (playerZ <= DEST_Z) {
-      triggerWin();
-    }
-  }
-
-  function triggerWin() {
-    if (gameState !== 'playing') return;
-    gameState = 'win';
-    stopTimer();
-    clearTimers();
-    playWin();
-    setTimeout(showLevelComplete, 900);
-  }
-
-  function showLevelComplete() {
-    lcScore.textContent = score;
-    lcTime.textContent  = timeLeft + 's';
-    lcCoins.textContent = totalCoins;
-    lcDiff.textContent  = DIFFICULTY[difficulty].label;
-    lcScreen.style.display = 'flex';
   }
 
   // ── Camera ─────────────────────────────────────────────────
@@ -1307,16 +1795,6 @@
     setTimeout(showGameOver, 1200);
   }
 
-  function triggerTimeout() {
-    if (gameState !== 'playing') return;
-    gameState = 'dead';
-    deathReason = 'timeout';
-    playTimeout();
-    clearTimers();
-    goReason.textContent = "Time's up! You were late to class.";
-    setTimeout(showGameOver, 800);
-  }
-
   function triggerIdle() {
     if (gameState !== 'playing') return;
     gameState = 'dead';
@@ -1354,7 +1832,6 @@
     goScore.textContent = score;
     goBest.textContent  = bestScore;
     goCoins.textContent = totalCoins;
-    goTime.textContent  = timeLeft + 's';
     goScreen.style.display = 'flex';
   }
 
@@ -1418,27 +1895,69 @@
 
   function setupScreenButtons() {
     // Difficulty selector
+    const diffHint = document.getElementById('diff-hint');
+    const hintText = { easy: 'Easy · slower hazards',
+                       medium: 'Medium · normal pace',
+                       hard: 'Hard · fast, frequent hazards' };
+    if (diffHint) diffHint.textContent = hintText[difficulty];
     document.querySelectorAll('.diff-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
         document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         difficulty = btn.dataset.diff;
+        if (diffHint) diffHint.textContent = hintText[difficulty];
       });
     });
 
-    // Splash — tap anywhere to start
-    startScreen.addEventListener('click', startGame);
+    // Character selector arrows
+    const prevBtn = document.getElementById('char-prev');
+    const nextBtn = document.getElementById('char-next');
+    if (prevBtn) prevBtn.addEventListener('click', e => { e.stopPropagation(); cycleChar(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', e => { e.stopPropagation(); cycleChar(1); });
 
-    // Restart / next level
+    // Splash — tap the "START" button to begin (not the whole screen,
+    // so selector controls remain clickable)
+    const startBtn = document.getElementById('start-btn');
+    if (startBtn) startBtn.addEventListener('click', e => { e.stopPropagation(); startGame(); });
+
+    // Restart
     document.getElementById('restart-btn').addEventListener('click', restartGame);
-    document.getElementById('nextlevel-btn').addEventListener('click', restartGame);
+    const nextLevelBtn = document.getElementById('nextlevel-btn');
+    if (nextLevelBtn) nextLevelBtn.addEventListener('click', restartGame);
+
+    updateCharUI();
+  }
+
+  // ── Character selection ────────────────────────────────────
+  function cycleChar(dir) {
+    selectedCharIndex = (selectedCharIndex + dir + CHARACTERS.length) % CHARACTERS.length;
+    selectedCharId = CHARACTERS[selectedCharIndex].id;
+    updateCharUI();
+    swapPreviewCharacter();
+  }
+
+  function updateCharUI() {
+    const nameEl  = document.getElementById('char-name');
+    const blurbEl = document.getElementById('char-blurb');
+    const ch = CHARACTERS[selectedCharIndex];
+    if (nameEl)  nameEl.textContent  = ch.name;
+    if (blurbEl) blurbEl.textContent = ch.blurb;
   }
 
   function startGame() {
     startScreen.style.display = 'none';
     gameState = 'playing';
-    initGame();
+    try {
+      initGame();
+    } catch(err) {
+      console.error('initGame crashed:', err);
+      // Show error on screen
+      const el = document.createElement('div');
+      el.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#c41230;color:#fff;padding:12px 16px;font:11px monospace;z-index:9999;white-space:pre-wrap;word-break:break-all;';
+      el.textContent = '⚠ initGame error: ' + err.message + '\n' + (err.stack || '');
+      document.body.appendChild(el);
+    }
   }
 
   function restartGame() {
@@ -1468,7 +1987,7 @@
       Object.values(coinMeshes).forEach(arr =>
         arr.forEach(c => { if (!c.collected) c.mesh.rotation.y = elapsed*3; })
       );
-    } else if (gameState === 'dead' || gameState === 'win') {
+    } else if (gameState === 'dead') {
       updateObstacles(dt);
       animateWater(elapsed);
     }
@@ -1477,21 +1996,63 @@
     renderer.render(scene, camera);
   }
 
+  // ── Character preview (mini rotating 3D scene on splash) ───
+  let previewScene, previewCamera, previewRenderer, previewMesh, previewRAF;
+
+  function initCharPreview() {
+    const canvas = document.getElementById('char-canvas');
+    if (!canvas) return;
+
+    previewScene = new THREE.Scene();
+    previewScene.background = null; // transparent
+
+    const size = 180;
+    previewCamera = new THREE.OrthographicCamera(-1.1, 1.1, 1.1, -1.1, 0.1, 50);
+    previewCamera.position.set(2.4, 2.0, 2.4);
+    previewCamera.lookAt(0, 0.45, 0);
+
+    previewRenderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    previewRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    previewRenderer.setSize(size, size, false);
+
+    previewScene.add(new THREE.AmbientLight(0xffffff, 0.75));
+    const pl = new THREE.DirectionalLight(0xffffff, 0.7);
+    pl.position.set(3, 5, 4);
+    previewScene.add(pl);
+
+    swapPreviewCharacter();
+    animatePreview();
+  }
+
+  function swapPreviewCharacter() {
+    if (!previewScene) return;
+    if (previewMesh) previewScene.remove(previewMesh);
+    const holder = new THREE.Group();
+    const m = buildPlayer(selectedCharId);
+    // Remove the flat shadow blob (last child) for the preview so it floats cleanly
+    holder.add(m);
+    holder.position.y = -0.1;
+    previewMesh = holder;
+    previewScene.add(previewMesh);
+  }
+
+  function animatePreview() {
+    previewRAF = requestAnimationFrame(animatePreview);
+    if (previewMesh) previewMesh.rotation.y += 0.02;
+    if (previewRenderer) previewRenderer.render(previewScene, previewCamera);
+  }
+
   // ── Boot ───────────────────────────────────────────────────
   function boot() {
     initThree();
     setupInput();
     setupScreenButtons();
 
-    // Build a small preview world visible behind the splash
-    const previewLanes = LEVEL1_LANES.slice(0, 12);
-    previewLanes.forEach((def, idx) => {
-      const z = -idx;
-      const lane = makeLaneFromDef(def, z);
-      lanes.push(lane);
-      buildTile(lane);
-      populateLane(lane);
-    });
+    // Build a preview world visible behind the splash
+    buildLevelWorld();
+
+    // Build the character preview scene (separate mini renderer)
+    initCharPreview();
 
     loop();
   }

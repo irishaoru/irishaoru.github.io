@@ -188,7 +188,34 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 28px 34px 24px;
+      border-radius: 24px;
+      background: rgba(0,0,0,0.16);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      backdrop-filter: blur(2px);
     }
+
+    /* ── CMU Tartan stripe accents (top & bottom of splash) ── */
+    .tartan-stripe {
+      position: absolute;
+      left: 0; right: 0;
+      height: 22px;
+      z-index: 2;
+      /* Woven tartan: red base with black + gray + white threads */
+      background:
+        repeating-linear-gradient(90deg,
+          #c41230 0px, #c41230 20px,
+          #8a0b20 20px, #8a0b20 26px,
+          #c41230 26px, #c41230 46px,
+          #1a1a1a 46px, #1a1a1a 52px,
+          #c41230 52px, #c41230 60px,
+          #e8b04b 60px, #e8b04b 64px,
+          #c41230 64px, #c41230 84px,
+          #1a1a1a 84px, #1a1a1a 90px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .tartan-stripe.top    { top: 0; }
+    .tartan-stripe.bottom { bottom: 0; }
 
     /* ── Logo ── */
     .logo-wrap {
@@ -260,7 +287,7 @@
     .diff-buttons {
       display: flex;
       gap: 12px;
-      margin-bottom: 44px;
+      margin-bottom: 14px;
     }
 
     .diff-btn {
@@ -285,6 +312,15 @@
     .diff-btn.hard.selected   { box-shadow: 0 8px 0 var(--cmu-red-d), 0 12px 20px rgba(0,0,0,0.3); }
 
     .diff-btn:active { transform: translateY(3px) !important; }
+
+    .diff-hint {
+      font-size: clamp(7px, 1.5vw, 9px);
+      color: rgba(0,0,0,0.55);
+      letter-spacing: 1px;
+      margin-bottom: 34px;
+      text-align: center;
+      min-height: 1em;
+    }
 
     .splash-tap {
       font-size: clamp(8px, 1.8vw, 11px);
@@ -313,16 +349,31 @@
 
     /* Stats card */
     .go-card {
+      position: relative;
       background: rgba(255,255,255,0.10);
       border: 2px solid rgba(255,255,255,0.18);
       border-radius: 20px;
-      padding: 24px 40px;
+      padding: 28px 40px 24px;
       margin-bottom: 28px;
       display: flex;
       flex-direction: column;
       gap: 16px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.4);
       min-width: min(300px, 82vw);
+      overflow: hidden;
+    }
+    /* CMU tartan accent strip along the top of the stats card */
+    .go-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 8px;
+      background:
+        repeating-linear-gradient(90deg,
+          #c41230 0px, #c41230 14px,
+          #1a1a1a 14px, #1a1a1a 18px,
+          #c41230 18px, #c41230 30px,
+          #e8b04b 30px, #e8b04b 34px);
     }
     .go-row {
       display: flex;
@@ -486,6 +537,88 @@
       z-index: 15;
       animation: coinPopAnim 0.6s ease-out forwards;
     }
+
+    /* ═══════════════════════════════════════
+       CHARACTER SELECTOR (splash)
+    ═══════════════════════════════════════ */
+    .char-select {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .char-label {
+      font-size: clamp(8px, 1.8vw, 11px);
+      color: rgba(0,0,0,0.6);
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+    .char-stage {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .char-arrow {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 18px;
+      color: #fff;
+      background: var(--cmu-red);
+      border: none;
+      border-radius: 12px;
+      width: 46px; height: 46px;
+      cursor: pointer;
+      box-shadow: 0 5px 0 var(--cmu-red-d);
+      transition: transform 0.08s, box-shadow 0.08s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .char-arrow:hover  { transform: translateY(-2px); box-shadow: 0 7px 0 var(--cmu-red-d); }
+    .char-arrow:active { transform: translateY(3px);  box-shadow: 0 2px 0 var(--cmu-red-d); }
+
+    .char-viewport {
+      width: 180px; height: 180px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.12));
+      border: 3px solid rgba(255,255,255,0.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25), inset 0 2px 10px rgba(255,255,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    #char-canvas { width: 180px; height: 180px; display: block; }
+
+    .char-info {
+      margin-top: 12px;
+      text-align: center;
+    }
+    #char-name {
+      font-size: clamp(10px, 2.2vw, 14px);
+      color: var(--cmu-red);
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+    }
+    #char-blurb {
+      margin-top: 6px;
+      font-size: clamp(7px, 1.5vw, 9px);
+      color: rgba(0,0,0,0.6);
+      letter-spacing: 1px;
+    }
+
+    /* Splash START button (chunky) */
+    #start-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(12px, 2.4vw, 16px);
+      letter-spacing: 3px;
+      color: #fff;
+      background: linear-gradient(180deg, var(--cmu-red) 0%, #9a0020 100%);
+      border: none;
+      border-radius: 16px;
+      padding: 16px 52px;
+      cursor: pointer;
+      box-shadow: 0 8px 0 var(--cmu-red-d), 0 12px 20px rgba(0,0,0,0.35);
+      transition: transform 0.08s, box-shadow 0.08s;
+      margin-top: 4px;
+    }
+    #start-btn:hover  { transform: translateY(-3px); box-shadow: 0 11px 0 var(--cmu-red-d), 0 16px 26px rgba(0,0,0,0.4); }
+    #start-btn:active { transform: translateY(4px);  box-shadow: 0 4px 0 var(--cmu-red-d), 0 6px 10px rgba(0,0,0,0.3); }
   </style>
 </head>
 <body>
@@ -497,10 +630,6 @@
       <span id="score-icon">👟</span>
       <span id="score-display">0</span>
     </div>
-    <div class="hud-pill" id="timer-pill">
-      <span id="timer-icon">⏱</span>
-      <span id="timer-display">60</span>
-    </div>
     <div class="hud-pill" id="coin-pill">
       <div class="coin-icon"></div>
       <span id="coin-display">0</span>
@@ -509,20 +638,31 @@
 
   <div id="hop-flash"></div>
 
-  <!-- Level label (brief flash at round start) -->
-  <div id="level-label">
-    <span class="lv-num">LEVEL 1</span>
-    <span class="lv-name">Margaret Morrison → Tepper</span>
-  </div>
-
   <!-- ── Splash ────────────────────────────── -->
   <div id="splash-screen">
+    <div class="tartan-stripe top"></div>
     <div class="splash-content">
       <div class="logo-wrap">
         <div class="logo-depth" aria-hidden="true">CMU<br>CROSSY<br>ROAD</div>
         <div class="logo-front"><span class="cmu-word">CMU</span><br>CROSSY<br>ROAD</div>
       </div>
-      <div class="splash-subtitle">Cross campus. Don't be late.</div>
+      <div class="splash-subtitle">Endless dash across campus — how far can you go?</div>
+
+      <!-- Character selector -->
+      <div class="char-select">
+        <div class="char-label">PICK YOUR STUDENT</div>
+        <div class="char-stage">
+          <button class="char-arrow" id="char-prev" aria-label="Previous character">◀</button>
+          <div class="char-viewport">
+            <canvas id="char-canvas" width="180" height="180"></canvas>
+          </div>
+          <button class="char-arrow" id="char-next" aria-label="Next character">▶</button>
+        </div>
+        <div class="char-info">
+          <div id="char-name">CMU STUDENT</div>
+          <div id="char-blurb">Red hoodie, jeans, sneakers</div>
+        </div>
+      </div>
 
       <div class="diff-label">SELECT DIFFICULTY</div>
       <div class="diff-buttons">
@@ -530,8 +670,11 @@
         <button class="diff-btn medium selected" data-diff="medium">MED</button>
         <button class="diff-btn hard"   data-diff="hard">HARD</button>
       </div>
-      <div class="splash-tap">TAP TO START</div>
+      <div class="diff-hint" id="diff-hint">Medium · normal pace</div>
+
+      <button id="start-btn">START</button>
     </div>
+    <div class="tartan-stripe bottom"></div>
   </div>
 
   <!-- ── Game Over ──────────────────────────── -->
@@ -553,40 +696,13 @@
         <span class="go-label">COINS</span>
         <span class="go-value gold" id="gameover-coins">0</span>
       </div>
-      <div class="go-divider"></div>
-      <div class="go-row">
-        <span class="go-label">TIME LEFT</span>
-        <span class="go-value red" id="gameover-time">0s</span>
-      </div>
     </div>
     <button class="btn red-btn" id="restart-btn">TRY AGAIN</button>
   </div>
 
-  <!-- ── Level Complete ─────────────────────── -->
-  <div class="overlay-screen" id="levelcomplete-screen">
-    <div class="lc-title">YOU MADE IT!</div>
-    <div class="lc-subtitle">Arrived at Tepper 🎉</div>
-    <div class="go-card">
-      <div class="go-row">
-        <span class="go-label">STEPS</span>
-        <span class="go-value" id="lc-score">0</span>
-      </div>
-      <div class="go-divider"></div>
-      <div class="go-row">
-        <span class="go-label">TIME LEFT</span>
-        <span class="go-value green" id="lc-time">0s</span>
-      </div>
-      <div class="go-divider"></div>
-      <div class="go-row">
-        <span class="go-label">COINS</span>
-        <span class="go-value gold" id="lc-coins">0</span>
-      </div>
-      <div class="go-divider"></div>
-      <div class="go-row">
-        <span class="go-label">DIFFICULTY</span>
-        <span class="go-value" id="lc-diff">MED</span>
-      </div>
-    </div>
+  <!-- ── (Level-complete overlay kept in DOM but unused in endless mode) ── -->
+  <div class="overlay-screen" id="levelcomplete-screen" style="display:none">
+    <div class="go-card"></div>
     <button class="btn" id="nextlevel-btn">PLAY AGAIN</button>
   </div>
 
@@ -604,6 +720,16 @@
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  // Surface any JS errors visibly so they're not silent
+  window.onerror = function(msg, src, line, col, err) {
+    var el = document.createElement('div');
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#c41230;color:#fff;padding:12px 16px;font:12px monospace;z-index:9999;white-space:pre-wrap;word-break:break-all;';
+    el.textContent = '⚠ JS ERROR (line ' + line + '): ' + msg;
+    document.body.appendChild(el);
+    return false;
+  };
+</script>
 <script src="game.js"></script>
 </body>
 </html>
