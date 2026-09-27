@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="580" viewBox="0 0 520 580" fill="none">
+  <rect width="520" height="580" rx="20" fill="#F2F6F3"/>
+  <circle cx="260" cy="282" r="190" stroke="#D9E6DE"/>
+  <circle cx="260" cy="282" r="148" stroke="#D9E6DE" stroke-dasharray="5 9"/>
+  <text x="40" y="58" fill="#346650" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">INTERNSHIP ANALYZER</text>
+  <rect x="126" y="124" width="268" height="330" rx="20" fill="#DDE9E1"/>
+  <rect x="116" y="114" width="268" height="330" rx="20" fill="white" stroke="#D3E1D8"/>
+  <rect x="146" y="146" width="54" height="54" rx="14" fill="#E4F0E8"/>
+  <path d="M161 184L184 161M164 161H184V181" stroke="#346650" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M148 228H318M148 248H272" stroke="#C6D7CC" stroke-width="9" stroke-linecap="round"/>
+  <path d="M146 278H354" stroke="#E5ECE7" stroke-width="2"/>
+  <g stroke="#346650" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M148 306L155 313L168 298M148 348L155 355L168 340M148 390H168M158 380V400"/>
+  </g>
+  <path d="M192 307H328M192 349H303M192 391H318" stroke="#D4E2D9" stroke-width="9" stroke-linecap="round"/>
+  <rect x="190" y="426" width="256" height="54" rx="27" fill="#346650"/>
+  <text x="318" y="460" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="19">Find your potential ↗</text>
+  <text x="260" y="536" text-anchor="middle" fill="#526B5D" font-family="Arial, sans-serif" font-size="19">Your experience. Your next step.</text>
+</svg>
