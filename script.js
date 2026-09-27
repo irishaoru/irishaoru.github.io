@@ -11,7 +11,7 @@ navLinks?.querySelectorAll('a').forEach(link => {
     menuButton?.setAttribute('aria-expanded', 'false');
   });
 });
-#navigation
+// navigation
 
 const pageSections = document.querySelectorAll('.scroll-section');
 const sectionLinks = document.querySelectorAll('.nav-links a[href^="#"]');
@@ -26,7 +26,7 @@ if ('IntersectionObserver' in window) {
   }, { rootMargin: '-25% 0px -60% 0px' });
   pageSections.forEach(section => sectionObserver.observe(section));
 }
-#navigation highlighting
+// navigation highlighting
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealItems = document.querySelectorAll('.reveal');
@@ -41,8 +41,10 @@ if (reduceMotion || !('IntersectionObserver' in window)) {
       observer.unobserve(entry.target);
     });
   }, { threshold: .18 });
-  #scroll reveals
+  // scroll reveals
   revealItems.forEach(item => observer.observe(item));
+  // Hide content only after scroll reveals are ready.
+  document.documentElement.classList.add('reveal-ready');
 }
 function makeRevealDust(element) {
   const rect = element.getBoundingClientRect();
@@ -57,7 +59,7 @@ function makeRevealDust(element) {
     setTimeout(() => dust.remove(), 1000);
   }
 }
-#reveal dust
+// reveal dust
 
 const fairyButton = document.querySelector('.fairy-toggle');
 let fairyOn = false;
@@ -84,7 +86,7 @@ function updateFairyButton() {
   fairyButton.setAttribute('aria-pressed', String(fairyOn));
   fairyButton.textContent = fairyOn ? '✦ Fairy dust: on' : '✦ Fairy dust: off';
 }
-#faiy dust toggle
+// fairy dust toggle
 
 document.addEventListener('pointermove', event => {
   if (!fairyOn || reduceMotion || Date.now() - lastSparkle < 45) return;
@@ -99,14 +101,14 @@ document.addEventListener('pointermove', event => {
   document.body.appendChild(sparkle);
   setTimeout(() => sparkle.remove(), 750);
 });
-#cursor sparkles
+// cursor sparkles
 
 document.querySelector('.contact-form')?.addEventListener('submit', event => {
   event.preventDefault();
   const note = document.querySelector('.form-note');
   note.textContent = 'Form placeholder submitted — connect this form to your preferred email service before publishing.';
 });
-#contact form
+// contact form
 
 const projectModal = document.querySelector('.project-modal');
 const modalContent = projectModal?.querySelector('.modal-content');
@@ -138,7 +140,7 @@ function closeProjectModal() {
   }
 }
 
-#project popup
+// project popup
 projectModal?.querySelector('.modal-close')?.addEventListener('click', closeProjectModal);
 projectModal?.addEventListener('click', event => {
   if (event.target === projectModal) closeProjectModal();
@@ -167,4 +169,4 @@ if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').mat
     });
   });
 }
-#card tilt
+// card tilt
