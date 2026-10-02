@@ -38,7 +38,7 @@ function createLayer(group,index,slot){
  layer.className=group===0?'build-scoop':group===1?'build-toppings':index===2?'build-cream':'build-sauce';
  const anchor=order.flavors.length>1?65:order.flavors.length===1?165:245;
  layer.style.setProperty('--layer-top',`${anchor}px`);
- if(group===1&&index===10&&order.drizzles.includes(2))layer.style.top=`${anchor-48}px`;
+ if(group===1&&index===10&&order.drizzles.includes(2))layer.style.top=`${anchor-88}px`;
  if(group===0){layer.dataset.slot=String(slot);layer.append(layerImage(layerPath(group,index)));}
  else if(group===1){
   const count=index===10?1:index===0?7:6;
@@ -58,8 +58,9 @@ function syncComposition(){
  let root=select('#sundae').querySelector('.composition');
  if(!root){
   root=document.createElement('span');root.className='composition';
-  const vessel=layerImage(`assets/builder/${order.vessel}.png`);vessel.className=`build-vessel ${order.vessel}`;
-  root.append(vessel);select('#sundae').append(root);
+  const vessel=layerImage(`assets/builder/${order.vessel}.png`);vessel.className=`build-vessel vessel-back ${order.vessel}`;
+  const front=layerImage(`assets/builder/${order.vessel}.png`);front.className=`build-vessel vessel-front ${order.vessel}`;
+  root.append(vessel);root.append(front);select('#sundae').append(root);
  }
  const desired=new Set();
  ['flavors','toppings','drizzles'].forEach((key,group)=>order[key].forEach((index,slot)=>{

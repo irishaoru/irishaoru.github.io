@@ -35,3 +35,9 @@
 
 .build-toppings[data-layer="1-10"]{z-index:10}
 .build-toppings[data-layer="1-10"] img{left:50%!important;top:0!important;translate:-50% 0;rotate:0deg!important;width:30px;height:30px}
+
+/* The scoop sits between the back of the vessel and its front rim. */
+.build-vessel.vessel-back{z-index:1}
+.build-vessel.vessel-front{z-index:4;filter:none;clip-path:polygon(0 18%,5% 24%,15% 29%,30% 32%,50% 33%,70% 32%,85% 29%,95% 24%,100% 18%,100% 100%,0 100%)}
+.build-vessel.vessel-front.cone{clip-path:polygon(0 12%,10% 20%,25% 26%,50% 29%,75% 26%,90% 20%,100% 12%,100% 100%,0 100%)}
+.build-cream{width:120px;height:130px;top:calc(var(--layer-top) - 80px)}
