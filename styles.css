@@ -19,22 +19,22 @@
 @media(max-width:800px){.scene{padding-top:35px}#items.toppings{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 12px}}
 @media(max-width:480px){#items.toppings{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 10px}.toppings .flavor{font-size:11px}.food-art{border-radius:8px}footer{padding:18px 5%}#about img{width:35px;height:35px}}
 
-/* Split the existing transparent character into a body and waving arm. */
+/* Shopkeeper speech bubble. */
 footer{align-items:flex-end}
 #about{position:relative;display:flex;flex-direction:column;gap:6px;flex-shrink:0;padding:36px 8px 8px;isolation:isolate;text-decoration:none}
-#about .waving-shopkeeper{position:relative;display:block;width:180px;aspect-ratio:1024/1365}
-#about .waving-shopkeeper img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
-.shopkeeper-body{clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 82%,27% 82%,35% 74%,35% 57%,28% 34%,0 34%)}
-.shopkeeper-arm{clip-path:polygon(0 34%,28% 34%,35% 57%,35% 74%,27% 82%,0 82%);transform-origin:32% 72%;animation:shopkeeper-wave 4.5s ease-in-out infinite}
+
+
+
+
 .meet-bubble{position:absolute;z-index:2;right:0;top:0;padding:12px 20px;border:2px solid #d79a9c;border-radius:22px 22px 22px 6px;background:#fffdf5;color:var(--red);font:600 17px 'Avenir Next','Trebuchet MS',sans-serif;letter-spacing:0;box-shadow:0 4px 0 #efd9cc}
 .meet-bubble:after{content:'';position:absolute;left:17px;bottom:-9px;width:13px;height:13px;background:#fffdf5;border-right:2px solid #d79a9c;border-bottom:2px solid #d79a9c;transform:rotate(45deg)}
 .shopkeeper-caption{font:italic 14px Georgia;letter-spacing:0;color:var(--red)}
 #about:hover .meet-bubble,#about:focus-visible .meet-bubble{background:#fff0e5}
 #about:hover .meet-bubble:after,#about:focus-visible .meet-bubble:after{background:#fff0e5}
 #about:hover .shopkeeper-caption{text-decoration:underline}
-@keyframes shopkeeper-wave{0%,12%,48%,100%{transform:rotate(0)}20%,36%{transform:rotate(-12deg)}28%,44%{transform:rotate(9deg)}}
-@media(max-width:480px){footer{align-items:center;gap:10px}footer>span{max-width:145px;line-height:1.8}#about .waving-shopkeeper{width:140px}.meet-bubble{font-size:15px;padding:10px 17px}.shopkeeper-caption{font-size:11px}}
-@media(prefers-reduced-motion:reduce){.shopkeeper-arm{animation:none}}
+
+@media(max-width:480px){footer{align-items:center;gap:10px}footer>span{max-width:145px;line-height:1.8}.meet-bubble{font-size:15px;padding:10px 17px}.shopkeeper-caption{font-size:11px}}
+@media(prefers-reduced-motion:reduce){}
 
 /* Two compact rows of toppings, with taller rectangular project tubs. */
 #items.flavors{min-height:380px;align-items:start}
@@ -57,3 +57,15 @@ body:has(#welcome:not([hidden])) footer>span{visibility:hidden}
 @media(max-width:800px){#items.flavors{min-height:380px}.flavors .food-art{height:150px}#items.toppings{grid-template-columns:repeat(7,minmax(84px,1fr));min-height:380px}.welcome-inner{padding-top:70px}}
 @media(max-width:480px){#items.flavors{min-height:380px}.flavors .food-art{height:130px}#items.toppings{grid-template-columns:repeat(7,minmax(84px,1fr));min-height:380px}.welcome-inner{padding-top:70px}.hanging-open{width:130px;font-size:22px}.intro{min-height:76px}}
 @media(prefers-reduced-motion:reduce){.is-entering .hanging-open,.is-typing:after{animation:none}}
+
+/* Iris belongs to the landing scene, beside the counter. */
+#welcome{position:relative}
+#welcome #about{position:absolute;right:6%;bottom:35px;z-index:2;padding:38px 0 0;background:none}
+#welcome #about .landing-shopkeeper{display:block;width:180px;height:auto;object-fit:contain;clip-path:none;animation:none}
+#welcome .welcome-inner{padding-left:220px;padding-right:220px}
+#welcome .welcome-inner:after{display:none}
+body:has(#welcome:not([hidden])) footer{display:none}
+footer{align-items:center}
+.shopkeeper-photo{display:block;width:min(100%,280px);height:auto;border-radius:16px;margin:0 auto 20px;border:4px solid #f4ddd0}
+@media(max-width:900px){#welcome .welcome-inner{padding-left:20px;padding-right:20px;padding-bottom:100px}#welcome #about{right:4%;bottom:25px}#welcome #about .landing-shopkeeper{width:135px}}
+@media(max-width:480px){#welcome .welcome-inner{padding-bottom:165px}#welcome #about{bottom:15px;right:6%}#welcome #about .landing-shopkeeper{width:125px}}
