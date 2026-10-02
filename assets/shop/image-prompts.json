@@ -1,0 +1,88 @@
+{
+  "tool": "Built-in image_gen",
+  "food": [
+    {
+      "asset": "rainbow-sprinkles.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: rainbow sprinkles, densely scattered tiny multicolored sugar rods. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "oreo-crumbs.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: realistic broken dark chocolate sandwich cookies: jagged near-black embossed cookie chunks with gritty fine crumbs and clearly visible white cream filling in broken sandwich layers; like a real pile of crushed Oreos. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "gummy-bears.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: translucent colorful gummy bears, recognizable bear shapes. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "strawberries.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: fresh sliced strawberries, vivid red, white cores and tiny seeds. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "blueberries.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: fresh blueberries, dusty blue skins with realistic bloom and star crowns. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "mango.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: fresh golden-orange mango cubes. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "peanut-butter-cups.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: broken Reese-style peanut butter cups, dark chocolate ridged shell and visible golden peanut butter centers. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "marshmallows.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: small fluffy white mini marshmallows. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "graham-crackers.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: broken golden graham crackers, crisp perforated surfaces. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "brownie-pieces.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: fudgy chocolate brownie cubes, moist crumbly texture. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "cookie-dough.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: beige cookie dough bites with visible chocolate chips. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "cherry.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: glossy red maraschino cherries, some with stems. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    },
+    {
+      "asset": "mochi-bites.jpg",
+      "prompt": "Use case: product-mockup. Asset type: square overhead ice cream topping tray image for a polished pastel game portfolio. Subject: small soft pastel pink, white and green mochi cubes dusted with starch. Strict straight down aerial view, food fills a square shallow brushed pale stainless steel bin with softly rounded corners, rim at image edges, no background outside tray. Macro food photography with slightly soft game-render polish, very detailed realistic textures, gentle warm diffuse lighting, natural tiny shadows, appetizing. Square composition. No labels, text, logos, watermark, utensils, hands, jars. All individual pieces recognizable. Return the local saved image file path."
+    }
+  ],
+  "flavors": [
+    {
+      "asset": "vanilla.jpg",
+      "prompt": "Use case: product-mockup. Asset type: overhead square ice cream tub image for a polished pastel shop game. Subject: creamy ivory vanilla ice cream with tiny vanilla bean flecks, freshly scooped and softly folded swirls with rich real texture, fills a square shallow pale brushed stainless steel bin whose softly rounded rim sits at image edges. Strict straight down aerial view. Detailed smooth high resolution food photography, softened tasteful game illustration polish, soft warm diffuse lighting, subtle shadows. Match an overhead topping bar. No labels, text, logos, watermark, hands, utensils, cones or background outside bin. Return local saved image path."
+    },
+    {
+      "asset": "chocolate.jpg",
+      "prompt": "Use case: product-mockup. Asset type: overhead square ice cream tub image for a polished pastel shop game. Subject: rich dark milk chocolate ice cream, freshly scooped and softly folded swirls with rich real texture, fills a square shallow pale brushed stainless steel bin whose softly rounded rim sits at image edges. Strict straight down aerial view. Detailed smooth high resolution food photography, softened tasteful game illustration polish, soft warm diffuse lighting, subtle shadows. Match an overhead topping bar. No labels, text, logos, watermark, hands, utensils, cones or background outside bin. Return local saved image path."
+    },
+    {
+      "asset": "coffee.jpg",
+      "prompt": "Use case: product-mockup. Asset type: overhead square ice cream tub image for a polished pastel shop game. Subject: light mocha coffee ice cream with subtle fine coffee flecks, freshly scooped and softly folded swirls with rich real texture, fills a square shallow pale brushed stainless steel bin whose softly rounded rim sits at image edges. Strict straight down aerial view. Detailed smooth high resolution food photography, softened tasteful game illustration polish, soft warm diffuse lighting, subtle shadows. Match an overhead topping bar. No labels, text, logos, watermark, hands, utensils, cones or background outside bin. Return local saved image path."
+    },
+    {
+      "asset": "pistachio.jpg",
+      "prompt": "Use case: product-mockup. Asset type: overhead square ice cream tub image for a polished pastel shop game. Subject: soft pale green pistachio ice cream with small real pistachio pieces, freshly scooped and softly folded swirls with rich real texture, fills a square shallow pale brushed stainless steel bin whose softly rounded rim sits at image edges. Strict straight down aerial view. Detailed smooth high resolution food photography, softened tasteful game illustration polish, soft warm diffuse lighting, subtle shadows. Match an overhead topping bar. No labels, text, logos, watermark, hands, utensils, cones or background outside bin. Return local saved image path."
+    },
+    {
+      "asset": "strawberry-cheesecake.jpg",
+      "prompt": "Use case: product-mockup. Asset type: overhead square ice cream tub image for a polished pastel shop game. Subject: cream colored strawberry cheesecake ice cream with pink strawberry swirls, tiny cheesecake chunks and graham crumbs, freshly scooped and softly folded swirls with rich real texture, fills a square shallow pale brushed stainless steel bin whose softly rounded rim sits at image edges. Strict straight down aerial view. Detailed smooth high resolution food photography, softened tasteful game illustration polish, soft warm diffuse lighting, subtle shadows. Match an overhead topping bar. No labels, text, logos, watermark, hands, utensils, cones or background outside bin. Return local saved image path."
+    },
+    {
+      "asset": "mango-ice-cream.jpg",
+      "prompt": "Use case: product-mockup. Asset type: overhead square ice cream tub image for a polished pastel shop game. Subject: golden yellow mango ice cream, freshly scooped and softly folded swirls with rich real texture, fills a square shallow pale brushed stainless steel bin whose softly rounded rim sits at image edges. Strict straight down aerial view. Detailed smooth high resolution food photography, softened tasteful game illustration polish, soft warm diffuse lighting, subtle shadows. Match an overhead topping bar. No labels, text, logos, watermark, hands, utensils, cones or background outside bin. Return local saved image path."
+    }
+  ],
+  "avatar": {
+    "asset": "shopkeeper.png",
+    "reference": "../../iris-hao-portrait.jpg",
+    "prompt": "Use case: stylized-concept. Create a new website shopkeeper avatar using the attached portrait only as likeness reference. Friendly Memoji-like softly rendered 3D bust of this young woman: long dark wavy hair, warm medium skin, her smile, black sunglasses as in photo, white shirt and strawberry-pink ice cream shop apron. Front facing, smiling, small friendly wave, head and torso centered fully visible with generous margin, transparent background. Smooth polished rounded 3D material with detailed hair, natural soft shadows. No text, no scenery. Save the finished image asset; return its local file path."
+  }
+}
