@@ -14,7 +14,6 @@ const toppings=[
  ['Marshmallows','PowerPoint','Skill','marshmallows'],
  ['Graham crackers','Canva','Skill','graham-crackers'],
  ['Brownie pieces','CapCut','Skill','brownie-pieces'],
- ['Cookie dough pieces','Framer','Skill','cookie-dough'],
  ['Cherry','Content Creation','Hobby','cherry'],
  ['Mochi bites','Skiing','Hobby','mochi-bites']
 ].map(([flavor,name,category,asset],i)=>({flavor,name,category,asset,color:colors[i%6]}));

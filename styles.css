@@ -86,3 +86,21 @@ footer{align-items:center}
 @media(max-width:480px){.drizzles .food-art{height:145px}}
 
 .drizzles .food-art{object-fit:contain;border-radius:0;box-shadow:none;filter:drop-shadow(0 6px 4px #6c524025)}
+
+/* Keep the welcome scene within the viewport, including Iris and the counter. */
+body:has(#welcome:not([hidden])){height:100svh;min-height:0;display:flex;flex-direction:column}
+body:has(#welcome:not([hidden])) header{flex:none;padding-top:68px;padding-bottom:8px}
+body:has(#welcome:not([hidden])) main{flex:1;min-height:0}
+#welcome{height:100%;display:flex;flex-direction:column;isolation:isolate}
+#welcome .welcome-inner{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:35px 190px 18px;gap:12px}
+#welcome h1{width:min(100%,520px);max-height:45svh;min-height:0;margin:0;flex:0 1 auto}
+#welcome h1 img{height:100%;max-height:45svh;width:100%;object-fit:contain}
+#welcome .intro{flex:none;min-height:0;margin:0;font-size:14px;line-height:1.6}
+#welcome #explore{flex:none;padding:13px 25px;font-size:14px}
+#welcome .welcome-counter{flex:none;height:60px}
+#welcome #about{right:4%;bottom:20px;padding-top:35px}
+#welcome #about .landing-shopkeeper{width:clamp(100px,16vw,170px);max-height:32svh;object-fit:contain}
+#items.toppings{grid-template-columns:repeat(6,minmax(84px,1fr))}
+@media(max-width:800px){#welcome .welcome-inner{padding:30px 24px 105px;gap:10px}#welcome h1,#welcome h1 img{max-height:36svh}#welcome #about .landing-shopkeeper{width:110px;max-height:25svh}#welcome .welcome-counter{height:45px}}
+@media(max-width:480px){#welcome .welcome-inner{padding:28px 18px 110px}#welcome h1,#welcome h1 img{max-height:33svh}#welcome .intro{max-width:330px;font-size:13px}#welcome #about{right:5%;bottom:8px}#welcome #about .landing-shopkeeper{width:95px;max-height:23svh}.hanging-logo:before,.hanging-logo:after{height:70px}#items.toppings{grid-template-columns:repeat(6,minmax(84px,1fr))}}
+@media(max-height:560px){body:has(#welcome:not([hidden])) header{padding-top:58px;padding-bottom:4px}.awning{height:43px}#welcome .welcome-inner{padding:12px 145px 8px;gap:6px}#welcome h1,#welcome h1 img{max-height:30svh}#welcome .intro{font-size:11px;line-height:1.4}#welcome #explore{padding:8px 18px;font-size:12px}#welcome .welcome-counter{height:28px}#welcome #about .landing-shopkeeper{width:85px;max-height:35svh}.meet-bubble{font-size:12px;padding:7px 12px}.hanging-logo:before,.hanging-logo:after{height:35px}}
