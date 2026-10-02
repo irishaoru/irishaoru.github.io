@@ -41,8 +41,8 @@ function render(index){
 }
 function show(html,trigger,nutrition=false){lastTrigger=trigger;$('#content').className=nutrition?'nutrition':'label';$('#content').innerHTML=html;$('dialog').showModal();$('#close').focus()}
 $('#items').addEventListener('click',event=>{const button=event.target.closest('[data-item]');if(!button)return;const item=sections[current].items[Number(button.dataset.item)];if(current===0){show(`<p class="facts">Project Facts</p><div class="serving">Flavor: ${e(item.flavor)} · Serving size: 100 g</div><h2 id="dialog-title">${e(item.name)}</h2><div class="fact-row"><strong>Category</strong><span>${e(item.category)}</span></div><div class="fact-row"><strong>Made during / type</strong><span>${e(item.date)}</span></div><div class="fact-row"><strong>Role / ingredients</strong><span>${e(item.role)}</span></div><p>${e(item.details)}</p>${item.url?`<a href="${e(item.url)}" target="_blank" rel="noopener noreferrer">Explore this project ↗</a>`:''}`,button,true)}else{show(`<p class="eyebrow">${e(item.category)}</p><p class="note">${e(item.flavor)}</p><h2 id="dialog-title">${e(item.name)}</h2>${item.details?`<p>${e(item.details)}</p><p class="eyebrow">${e(item.date)}</p>`:''}`,button)}});
-$('#explore').addEventListener('click',()=>{$('#welcome').hidden=true;$('#shop').hidden=false;render(0);$('#title').focus({preventScroll:true});window.scrollTo(0,0)});
-$('#home').addEventListener('click',()=>{$('#shop').hidden=true;$('#welcome').hidden=false;$('#explore').focus();window.scrollTo(0,0)});
+$('#explore').addEventListener('click',()=>{stopGreeting();$('#welcome').hidden=true;$('#shop').hidden=false;render(0);$('#title').focus({preventScroll:true});window.scrollTo(0,0)});
+$('#home').addEventListener('click',()=>{$('#shop').hidden=true;$('#welcome').hidden=false;startGreeting();$('#explore').focus();window.scrollTo(0,0)});
 $('#previous').addEventListener('click',()=>render(current-1));$('#next').addEventListener('click',()=>render(current+1));
  document.querySelectorAll('[data-section]').forEach(button=>button.addEventListener('click',()=>render(Number(button.dataset.section))));
 $('#close').addEventListener('click',()=>$('dialog').close());$('dialog').addEventListener('close',()=>lastTrigger?.focus());
@@ -50,3 +50,34 @@ $('dialog').addEventListener('click',event=>{if(event.target===$('dialog')){cons
 $('#about').addEventListener('click',event=>show('<img class="shopkeeper-avatar" src="assets/shop/shopkeeper.png" alt="Iris’s smiling Memoji-style shopkeeper avatar"><p class="eyebrow">MEET THE SHOPKEEPER</p><h2 id="dialog-title">Hi, I’m Iris.</h2><p>I’m a business student at Carnegie Mellon University interested in entrepreneurship, strategy, and innovation. I’m also looking to pursue an additional major in Human-Computer Interaction.</p><p>I love product design and development, using technology to create a better user experience, and client-facing consulting work that combines problem solving with communication.</p>',event.currentTarget));
 fetch('assets/projects.json').then(response=>{if(!response.ok)throw new Error('Could not load projects');return response.json()}).then(projects=>{sections[0].items=projects.map((p,i)=>({...p,flavor:flavors[i],color:colors[i]}));render(current)}).catch(()=>{$('#items').innerHTML='<p>Projects could not load. Please refresh the page.</p>'});
 render(0);
+
+// The sign arrives first; the greeting follows without repeated screen-reader announcements.
+const greeting = 'Hi, I’m Iris. Welcome to my little corner of the internet.';
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+let greetingTimer;
+function stopGreeting() {
+ clearTimeout(greetingTimer);
+ $('#welcome').classList.remove('is-entering');
+}
+function startGreeting() {
+ stopGreeting();
+ const output = $('#typed-greeting');
+ output.classList.remove('is-typing');
+ if (motionPreference.matches) { output.textContent = greeting; return; }
+ output.textContent = '';
+ // Restart the hanging sign when returning from the shop.
+ void $('#welcome').offsetWidth;
+ $('#welcome').classList.add('is-entering');
+ let position = 0;
+ function typeNext() {
+  output.classList.add('is-typing');
+  output.textContent = greeting.slice(0, ++position);
+  if (position < greeting.length) greetingTimer = setTimeout(typeNext, 38);
+  else output.classList.remove('is-typing');
+ }
+ greetingTimer = setTimeout(typeNext, 900);
+}
+motionPreference.addEventListener('change', () => {
+ if (!$('#welcome').hidden) startGreeting();
+});
+startGreeting();
