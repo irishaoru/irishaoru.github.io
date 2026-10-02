@@ -1,172 +1,40 @@
-const menuButton = document.querySelector('.menu-button');
-const navLinks = document.querySelector('.nav-links');
-menuButton?.addEventListener('click', () => {
-  const open = navLinks.classList.toggle('open');
-  menuButton.setAttribute('aria-expanded', String(open));
-});
-
-navLinks?.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    menuButton?.setAttribute('aria-expanded', 'false');
-  });
-});
-// navigation
-
-const pageSections = document.querySelectorAll('.scroll-section');
-const sectionLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-if ('IntersectionObserver' in window) {
-  const sectionObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      sectionLinks.forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
-      });
-    });
-  }, { rootMargin: '-25% 0px -60% 0px' });
-  pageSections.forEach(section => sectionObserver.observe(section));
+const $ = selector => document.querySelector(selector);
+const e = value => String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const flavors=['Strawberry','Blue Vanilla','Chocolate','Mango','Pistachio','Blackberry'];
+const colors=['#f2a5b6','#b6e1e8','#ba8766','#f3ce76','#c5d995','#c8b7de'];
+const shades=['#cf758e','#7ab9c8','#855738','#dca34f','#93af6d','#9c83b6'];
+const toppings=[['Rainbow sprinkles','Traveling','Hobby'],['Blue sugar','Swimming','Hobby'],['Coconut flakes','Skiing','Hobby'],['Cookie crumbles','Content Creation & Filmmaking','Hobbies'],['Cherry gems','Wix · Squarespace · Framer','Web design tools'],['Chocolate chips','Python','Programming skill'],['Sugar pearls','Canva · CapCut','Creative tools'],['Golden crunch','Excel · PowerPoint','Business tools'],['Mint bits','English · Chinese','Languages']].map(([flavor,name,category],i)=>({flavor,name,category,color:colors[i%6]}));
+const awards=[{flavor:'Hot fudge',name:'1st Place',category:'Award',details:'Undergraduate Consulting Club Case Competition',date:'December 2025',color:'#815846'},{flavor:'Peanut butter',name:'2nd Place',category:'Award',details:'180 Degrees Consulting × BNY Case Competition',date:'November 2025',color:'#d5ad6b'},{flavor:'Whipped cream',name:'Gold Award',category:'Award',details:'President’s Volunteer Service Award',date:'National Service Honor',color:'#fff4dc'}];
+const sections=[{name:'Flavors',title:'A scoop of what I do.',kicker:'THE FLAVOR CASE · PROJECTS',description:'Every flavor has a story. Pick one to take a peek.',caption:'SMALL BATCH PROJECTS',items:[]},{name:'Toppings',title:'The little things I love.',kicker:'THE TOPPING BAR · HOBBIES & SKILLS',description:'A sprinkle of personality, a handful of skills.',caption:'HOBBIES & SKILLS',items:toppings},{name:'Drizzles',title:'A sweet finishing touch.',kicker:'THE DRIZZLE STATION · AWARDS',description:'A few proud moments, poured with a little extra love.',caption:'AWARDS & RECOGNITION',items:awards}];
+let current=0,lastTrigger;
+function art(item,kind,index){
+ const color=item.color,shade=shades[index%6];let shapes;
+ if(kind===0){
+  const chips=Array.from({length:12},(_,i)=>`<ellipse cx="${30+i*31%88}" cy="${37+i*37%125}" rx="${index===2?6:3}" ry="2" fill="${shade}"/>`).join('');
+  shapes=`<rect x="9" y="12" width="132" height="176" rx="17" fill="#a3ada8" stroke="#c0c9c2" stroke-width="7"/><rect x="19" y="21" width="112" height="154" rx="16" fill="${color}"/><path d="M29 50q29-22 76-9M27 87q34-29 79-8M28 127q36-24 77-8M30 156q35-14 66-6" fill="none" stroke="${shade}" stroke-width="5" stroke-linecap="round" opacity=".48"/><path d="M28 32q18-9 41-5M28 67q25-17 56-11M28 107q23-13 43-11M30 144q19-12 43-10" stroke="#fff" stroke-width="5" opacity=".35" fill="none" stroke-linecap="round"/>${chips}`;
+ }else if(kind===1){
+  const bits=Array.from({length:33},(_,i)=>`<rect x="${37+i*23%77}" y="${88+i*17%70}" width="${index===0?4:7}" height="${index===0?10:5}" rx="2" fill="${index===0?colors[i%6]:color}" transform="rotate(${i*31} ${37+i*23%77} ${88+i*17%70})"/>`).join('');
+  shapes=`<rect x="27" y="55" width="96" height="128" rx="18" fill="#f7fcf3" fill-opacity=".6" stroke="#a4b9ae" stroke-width="3"/><rect x="30" y="48" width="90" height="17" rx="5" fill="#c0d1c6" stroke="#a4b9ae" stroke-width="2"/>${bits}<path d="M36 78v63" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>`;
+ }else if(index===2){shapes='<ellipse cx="75" cy="177" rx="53" ry="10" fill="#c9b39c" opacity=".3"/><path d="M28 135q-9-19 15-28-13-23 14-30-6-22 16-30 16-8 15-28 28 26 18 48 25 14 12 30 29 17 5 38Z" fill="#fff6e5" stroke="#d7bda4" stroke-width="3"/><path d="M47 111q24 13 58-2M56 81q26 10 44-5M67 54q18 5 21-7" fill="none" stroke="#e6d2b9" stroke-width="4" stroke-linecap="round"/><path d="M23 137h104l-10 39H33Z" fill="#efb1b5" stroke="#cb8f97" stroke-width="3"/><path d="M43 145v22m22-22v22m22-22v22m22-22v22" stroke="#fff0dd" stroke-width="4"/>';
+ }else{shapes=`<path d="M64 10h22v27l12 8v24H52V45l12-8Z" fill="#e3c7a1" stroke="#a7876e" stroke-width="3"/><rect x="41" y="59" width="68" height="123" rx="22" fill="${color}" stroke="#a7876e" stroke-width="3"/><path d="M52 77v33" stroke="#fff7e0" stroke-width="5" opacity=".45" stroke-linecap="round"/><rect x="46" y="110" width="58" height="44" rx="4" fill="#fff5e2" stroke="#b8987e" stroke-width="2"/><path d="M67 10h16V0H67" fill="#a7876e"/><path d="M60 130q15-16 30 0-15 17-30 0" fill="${color}"/>`;}
+ return `<svg viewBox="0 0 150 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${shapes}</svg>`;
 }
-// navigation highlighting
-
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const revealItems = document.querySelectorAll('.reveal');
-if (reduceMotion || !('IntersectionObserver' in window)) {
-  revealItems.forEach(item => item.classList.add('visible'));
-} else {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('visible');
-      makeRevealDust(entry.target);
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: .18 });
-  // scroll reveals
-  revealItems.forEach(item => observer.observe(item));
-  // Hide content only after scroll reveals are ready.
-  document.documentElement.classList.add('reveal-ready');
+function render(index){
+ current=(index+3)%3;const s=sections[current];
+ ['title','kicker','description','caption'].forEach(key=>$('#'+key).textContent=s[key]);
+ $('#items').className=s.name.toLowerCase();
+ $('#items').innerHTML=s.items.map((item,i)=>`<button class="treat" data-item="${i}" aria-label="${e(item.flavor)}: ${e(item.name)}">${art(item,current,i)}<span class="flavor">${e(item.flavor)}</span><span class="item-name">${e(item.name)}</span></button>`).join('');
+ document.querySelectorAll('[data-section]').forEach(button=>{if(Number(button.dataset.section)===current)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
+ for(const [id,offset] of [['previous',-1],['next',1]]){const name=sections[(current+offset+3)%3].name;$('#'+id).setAttribute('aria-label','Go to '+name.toLowerCase());$('#'+id+' small').textContent=name;}
 }
-function makeRevealDust(element) {
-  const rect = element.getBoundingClientRect();
-  for (let i = 0; i < 12; i++) {
-    const dust = document.createElement('i');
-    dust.className = 'reveal-spark';
-    dust.style.left = `${rect.left + Math.random() * rect.width}px`;
-    dust.style.top = `${rect.top + Math.random() * Math.min(rect.height, 180)}px`;
-    dust.style.setProperty('--x', `${(Math.random() - .5) * 90}px`);
-    dust.style.setProperty('--y', `${(Math.random() - .5) * 90}px`);
-    document.body.appendChild(dust);
-    setTimeout(() => dust.remove(), 1000);
-  }
-}
-// reveal dust
-
-const fairyButton = document.querySelector('.fairy-toggle');
-let fairyOn = false;
-try {
-  fairyOn = localStorage.getItem('fairyDust') === 'on';
-} catch (error) {
-  fairyOn = false;
-}
-let lastSparkle = 0;
-updateFairyButton();
-
-fairyButton?.addEventListener('click', () => {
-  fairyOn = !fairyOn;
-  try {
-    localStorage.setItem('fairyDust', fairyOn ? 'on' : 'off');
-  } catch (error) {
-    // Some local file previews disable browser storage; the toggle still works.
-  }
-  updateFairyButton();
-});
-
-function updateFairyButton() {
-  if (!fairyButton) return;
-  fairyButton.setAttribute('aria-pressed', String(fairyOn));
-  fairyButton.textContent = fairyOn ? '✦ Fairy dust: on' : '✦ Fairy dust: off';
-}
-// fairy dust toggle
-
-document.addEventListener('pointermove', event => {
-  if (!fairyOn || reduceMotion || Date.now() - lastSparkle < 45) return;
-  lastSparkle = Date.now();
-  const sparkle = document.createElement('span');
-  sparkle.className = 'sparkle';
-  sparkle.textContent = Math.random() > .5 ? '✦' : '·';
-  sparkle.style.left = `${event.clientX}px`;
-  sparkle.style.top = `${event.clientY}px`;
-  sparkle.style.setProperty('--dx', `${(Math.random() - .5) * 36}px`);
-  sparkle.style.setProperty('--dy', `${20 + Math.random() * 35}px`);
-  document.body.appendChild(sparkle);
-  setTimeout(() => sparkle.remove(), 750);
-});
-// cursor sparkles
-
-document.querySelector('.contact-form')?.addEventListener('submit', event => {
-  event.preventDefault();
-  const note = document.querySelector('.form-note');
-  note.textContent = 'Form placeholder submitted — connect this form to your preferred email service before publishing.';
-});
-// contact form
-
-const projectModal = document.querySelector('.project-modal');
-const modalContent = projectModal?.querySelector('.modal-content');
-let lastProjectButton;
-
-document.querySelectorAll('.project-open').forEach(button => {
-  button.addEventListener('click', () => {
-    const details = button.closest('.project-card')?.querySelector('.project-details');
-    if (!projectModal || !modalContent || !details) return;
-    lastProjectButton = button;
-    modalContent.innerHTML = details.innerHTML;
-    if (typeof projectModal.showModal === 'function') {
-      projectModal.showModal();
-    } else {
-      projectModal.setAttribute('open', '');
-      projectModal.classList.add('modal-fallback-open');
-    }
-    projectModal.querySelector('.modal-close')?.focus();
-  });
-});
-
-function closeProjectModal() {
-  if (!projectModal) return;
-  if (typeof projectModal.close === 'function') projectModal.close();
-  else {
-    projectModal.removeAttribute('open');
-    projectModal.classList.remove('modal-fallback-open');
-    lastProjectButton?.focus();
-  }
-}
-
-// project popup
-projectModal?.querySelector('.modal-close')?.addEventListener('click', closeProjectModal);
-projectModal?.addEventListener('click', event => {
-  if (event.target === projectModal) closeProjectModal();
-});
-projectModal?.addEventListener('close', () => lastProjectButton?.focus());
-
-document.querySelectorAll('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
-
-// A subtle pointer-following tilt gives project cards depth on desktop.
-if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  document.querySelectorAll('.project-card').forEach(card => {
-    card.addEventListener('pointermove', event => {
-      const rect = card.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width;
-      const y = (event.clientY - rect.top) / rect.height;
-      card.style.setProperty('--tilt-x', `${(0.5 - y) * 11}deg`);
-      card.style.setProperty('--tilt-y', `${(x - 0.5) * 11}deg`);
-      card.style.setProperty('--shine-x', `${x * 100}%`);
-      card.style.setProperty('--shine-y', `${y * 100}%`);
-    });
-    card.addEventListener('pointerleave', () => {
-      card.style.setProperty('--tilt-x', '0deg');
-      card.style.setProperty('--tilt-y', '0deg');
-      card.style.setProperty('--shine-x', '50%');
-      card.style.setProperty('--shine-y', '50%');
-    });
-  });
-}
-// card tilt
+function show(html,trigger,nutrition=false){lastTrigger=trigger;$('#content').className=nutrition?'nutrition':'label';$('#content').innerHTML=html;$('dialog').showModal();$('#close').focus()}
+$('#items').addEventListener('click',event=>{const button=event.target.closest('[data-item]');if(!button)return;const item=sections[current].items[Number(button.dataset.item)];if(current===0){show(`<p class="facts">Project Facts</p><div class="serving">Flavor: ${e(item.flavor)} · Serving size: one curious idea</div><h2 id="dialog-title">${e(item.name)}</h2><div class="fact-row"><strong>Category</strong><span>${e(item.category)}</span></div><div class="fact-row"><strong>Made during / type</strong><span>${e(item.date)}</span></div><div class="fact-row"><strong>Role / ingredients</strong><span>${e(item.role)}</span></div><p>${e(item.details)}</p>${item.url?`<a href="${e(item.url)}" target="_blank" rel="noopener noreferrer">Explore this project ↗</a>`:''}`,button,true)}else{show(`<p class="eyebrow">${e(item.category)}</p><p class="note">${e(item.flavor)}</p><h2 id="dialog-title">${e(item.name)}</h2>${item.details?`<p>${e(item.details)}</p><p class="eyebrow">${e(item.date)}</p>`:''}`,button)}});
+$('#explore').addEventListener('click',()=>{$('#welcome').hidden=true;$('#shop').hidden=false;render(0);$('#title').focus({preventScroll:true});window.scrollTo(0,0)});
+$('#home').addEventListener('click',()=>{$('#shop').hidden=true;$('#welcome').hidden=false;$('#explore').focus();window.scrollTo(0,0)});
+$('#previous').addEventListener('click',()=>render(current-1));$('#next').addEventListener('click',()=>render(current+1));
+ document.querySelectorAll('[data-section]').forEach(button=>button.addEventListener('click',()=>render(Number(button.dataset.section))));
+$('#close').addEventListener('click',()=>$('dialog').close());$('dialog').addEventListener('close',()=>lastTrigger?.focus());
+$('dialog').addEventListener('click',event=>{if(event.target===$('dialog')){const r=$('dialog').getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)$('dialog').close()}});
+$('#about').addEventListener('click',event=>show('<img class="portrait" src="iris-hao-portrait.jpg" alt="Iris Hao at sunset by the water"><p class="eyebrow">MEET THE SHOPKEEPER</p><h2 id="dialog-title">Hi, I’m Iris.</h2><p>I’m a business student at Carnegie Mellon University interested in entrepreneurship, strategy, and innovation. I’m also looking to pursue an additional major in Human-Computer Interaction.</p><p>I love product design and development, using technology to create a better user experience, and client-facing consulting work that combines problem solving with communication.</p>',event.currentTarget));
+fetch('assets/projects.json').then(response=>{if(!response.ok)throw new Error('Could not load projects');return response.json()}).then(projects=>{sections[0].items=projects.map((p,i)=>({...p,flavor:flavors[i],color:colors[i]}));render(current)}).catch(()=>{$('#items').innerHTML='<p>Projects could not load. Please refresh the page.</p>'});
+render(0);

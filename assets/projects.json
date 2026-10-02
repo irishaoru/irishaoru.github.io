@@ -1,0 +1,50 @@
+[
+  {
+    "name": "StuntPig Website Redesign",
+    "details": "A client-facing website strategy and implementation project completed with a cross-functional student team. \u2726 Launched in Framer Redesigned website now supports StuntPig\u2019s business operations. \u2197 From requirements to roadmap Turned client needs into actionable features and implementation steps.",
+    "url": "",
+    "category": "Web Design & Consulting",
+    "date": "Oct. 2025\u2013May 2026",
+    "role": "Tartan Marketing Association \u00b7 Consulting Committee Member"
+  },
+  {
+    "name": "DePaul School Strategy",
+    "details": "Parent-focused research for the DePaul School for Hearing and Speech. \u2315 Identified key barriers Uncovered challenges in parent awareness and website navigation. \u2726 Created an action plan Translated research into user needs, features, and a practical roadmap.",
+    "url": "",
+    "category": "User Research & Strategy",
+    "date": "Oct. 2025\u2013May 2026",
+    "role": "Tartan Marketing Association \u00b7 Consulting Committee Member"
+  },
+  {
+    "name": "Deloitte Undergraduate Case Competition",
+    "details": "\ud83c\udfc5 1st Place Carnegie Mellon local round \u2726 National Top 4 Among 16 university teams 01 Built a rural telehealth go-to-market strategy. 02 Designed a hybrid restaurant concept in seven hours. 03 Analyzed costs, feasibility, and revenue potential.",
+    "url": "",
+    "category": "Strategy & Case Competition",
+    "date": "Feb.\u2013Mar. 2026",
+    "role": "National Round Finalist"
+  },
+  {
+    "name": "YouTube Content Creation",
+    "details": "My content is primarily focused on lifestyle, college experiences, and student advice. Through this, I\u2019ve gained hands-on skills in filming, editing, and content strategy while building confidence in public speaking and vlogging. I use my platform to document my life and share authentic insights with others while experimenting with creative approaches to grow and engage my audience.",
+    "url": "https://www.youtube.com/@irishao1729",
+    "category": "Content Creation & Strategy",
+    "date": "Ongoing",
+    "role": "Creator \u00b7 Filming, Editing & Content Strategy"
+  },
+  {
+    "name": "Internship Analyzer",
+    "details": "A web app that compares your resume with an internship description to help you understand your fit, recognize your strengths, and identify practical next steps for your application. Personalized feedback on resume and role alignment Sample preview to explore the analysis experience Downloadable analysis to revisit your feedback HTML CSS JavaScript API Integration Try Internship Analyzer \u2197 Find your next step",
+    "url": "https://irishaoru.github.io/internship-analyzer-frontend/",
+    "category": "Web Application",
+    "date": "Career Tools",
+    "role": "HTML \u00b7 CSS \u00b7 JavaScript \u00b7 API Integration"
+  },
+  {
+    "name": "Customizable Flappy Bird",
+    "details": "Built an expanded version of Flappy Bird in Python with customizable difficulty, gravity, flying speed, pipe behavior, food, enemies, and bot modes. Multiple customizable game modes Computer-controlled opponent with adjustable difficulty Object-oriented, event-driven game logic Python CMU Graphics Game Development View source \u2197",
+    "url": "projects/flappy-bird/flappy_bird.py",
+    "category": "15-112 Term Project",
+    "date": "Interactive Game",
+    "role": "Python \u00b7 CMU Graphics \u00b7 Game Development"
+  }
+]
