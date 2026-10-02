@@ -22,14 +22,8 @@ const awards=[{flavor:'Hot fudge',name:'1st Place',category:'Award',details:'Und
 const sections=[{name:'Flavors',title:'A scoop of what I do.',kicker:'THE FLAVOR CASE · PROJECTS',description:'Every flavor has a story. Pick one to take a peek.',caption:'SMALL BATCH PROJECTS',items:[]},{name:'Toppings',title:'The little things I love.',kicker:'THE TOPPING BAR · HOBBIES & SKILLS',description:'A sprinkle of personality, a handful of skills.',caption:'HOBBIES & SKILLS',items:toppings},{name:'Drizzles',title:'A sweet finishing touch.',kicker:'THE DRIZZLE STATION · AWARDS',description:'A few proud moments, poured with a little extra love.',caption:'AWARDS & RECOGNITION',items:awards}];
 let current=0,lastTrigger;
 function art(item,kind,index){
- if(kind<2){
-  const asset=kind===0?flavorAssets[index]:item.asset;
-  return `<img class="food-art" src="assets/shop/${asset}.jpg" alt="" loading="lazy" width="512" height="512">`;
- }
- const color=item.color;let shapes;
- if(index===2){shapes='<ellipse cx="75" cy="177" rx="53" ry="10" fill="#c9b39c" opacity=".3"/><path d="M28 135q-9-19 15-28-13-23 14-30-6-22 16-30 16-8 15-28 28 26 18 48 25 14 12 30 29 17 5 38Z" fill="#fff6e5" stroke="#d7bda4" stroke-width="3"/><path d="M47 111q24 13 58-2M56 81q26 10 44-5M67 54q18 5 21-7" fill="none" stroke="#e6d2b9" stroke-width="4" stroke-linecap="round"/><path d="M23 137h104l-10 39H33Z" fill="#efb1b5" stroke="#cb8f97" stroke-width="3"/><path d="M43 145v22m22-22v22m22-22v22m22-22v22" stroke="#fff0dd" stroke-width="4"/>';
- }else{shapes=`<path d="M64 10h22v27l12 8v24H52V45l12-8Z" fill="#e3c7a1" stroke="#a7876e" stroke-width="3"/><rect x="41" y="59" width="68" height="123" rx="22" fill="${color}" stroke="#a7876e" stroke-width="3"/><path d="M52 77v33" stroke="#fff7e0" stroke-width="5" opacity=".45" stroke-linecap="round"/><rect x="46" y="110" width="58" height="44" rx="4" fill="#fff5e2" stroke="#b8987e" stroke-width="2"/><path d="M67 10h16V0H67" fill="#a7876e"/><path d="M60 130q15-16 30 0-15 17-30 0" fill="${color}"/>`;}
- return `<svg viewBox="0 0 150 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${shapes}</svg>`;
+ const asset=kind===0?flavorAssets[index]:kind===1?item.asset:['hot-fudge-bottle','peanut-butter-bottle','whipped-cream-dispenser'][index];
+ return `<img class="food-art" src="assets/shop/${asset}.${kind===2?'png':'jpg'}" alt="" loading="lazy" width="512" height="512">`;
 }
 function render(index){
  current=(index+3)%3;const s=sections[current];

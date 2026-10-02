@@ -1,0 +1,17 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "asset": "hot-fudge-bottle.png",
+      "prompt": "Use case: product-mockup. Ice cream shop portfolio asset: a clear squeeze bottle filled with rich dark chocolate hot fudge, realistic glossy chocolate visible through translucent plastic, cream colored pointed nozzle cap. One individual object, upright front view, centered, fully visible with generous margin, transparent background. Polished realistic product photography with soft warm studio light, material texture, natural highlights and shading. Cute pastel shop styling but realistic, no flat vector appearance. Label is blank cream paper with no words or letters. No text, logos, watermark, trays, hands or additional objects. Return local saved image path."
+    },
+    {
+      "asset": "peanut-butter-bottle.png",
+      "prompt": "Use case: product-mockup. Ice cream shop portfolio asset: a clear squeeze bottle filled with smooth golden peanut butter sauce, realistic creamy sauce visible through translucent plastic, cream colored pointed nozzle cap. One individual object, upright front view, centered, fully visible with generous margin, transparent background. Polished realistic product photography with soft warm studio light, material texture, natural highlights and shading. Cute pastel shop styling but realistic, no flat vector appearance. Label is blank cream paper with no words or letters. No text, logos, watermark, trays, hands or additional objects. Return local saved image path."
+    },
+    {
+      "asset": "whipped-cream-dispenser.png",
+      "prompt": "Use case: product-mockup. Ice cream shop portfolio asset: a realistic whipped cream aerosol dispenser can with a white nozzle and strawberry pink and cream body, a small whipped cream swirl on the blank label. One individual object, upright front view, centered, fully visible with generous margin, transparent background. Polished realistic product photography with soft warm studio light, material texture, natural highlights and shading. Cute pastel shop styling but realistic, no flat vector appearance. Label is blank cream paper with no words or letters. No text, logos, watermark, trays, hands or additional objects. Return local saved image path."
+    }
+  ]
+}

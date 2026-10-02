@@ -76,3 +76,13 @@ footer{align-items:center}
 .is-entering .hanging-logo{animation:logo-sign-arrive 1.3s cubic-bezier(.22,.65,.3,1) both}
 @keyframes logo-sign-arrive{0%{opacity:0;transform:translateY(-230px) rotate(-18deg) rotateY(-85deg)}45%{opacity:1;transform:translateY(10px) rotate(10deg) rotateY(25deg)}68%{transform:translateY(-5px) rotate(-6deg) rotateY(-12deg)}85%{transform:translateY(2px) rotate(3deg) rotateY(5deg)}100%{opacity:1;transform:translateY(0) rotate(0) rotateY(0)}}
 @media(prefers-reduced-motion:reduce){.is-entering .hanging-logo{animation:none}}
+
+/* A continuous fabric canopy, with a folded valance and shaded frame. */
+.awning{height:58px;mask:none;border-radius:0 0 5px 5px;border-top:5px solid #bd8984;border-bottom:4px solid #c88e90;background:repeating-linear-gradient(90deg,#edb0b4 0 64px,#fff0dd 64px 128px);box-shadow:inset 0 14px 16px #ffffff35,inset 0 -12px 14px #9c625527,0 5px 8px #76514920;z-index:3}
+.awning:before{content:'';position:absolute;left:0;right:0;top:30px;height:3px;background:#b9877d55;box-shadow:0 2px 0 #fff8e755}
+.awning:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 62px,#ab7d7540 63px,#fff8ed55 64px,transparent 65px);pointer-events:none}
+.drizzles .food-art{height:190px;aspect-ratio:auto}
+@media(max-width:800px){.drizzles .food-art{height:160px}}
+@media(max-width:480px){.drizzles .food-art{height:145px}}
+
+.drizzles .food-art{object-fit:contain;border-radius:0;box-shadow:none;filter:drop-shadow(0 6px 4px #6c524025)}
