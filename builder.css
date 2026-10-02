@@ -66,3 +66,14 @@
 .build-vessel.cone.vessel-front{clip-path:inset(27% 0 0)}
 .composition:has(.build-vessel.cone) .build-scoop{width:165px;height:160px;top:165px}
 .composition:has(.build-vessel.cone) .build-scoop[data-slot="1"]{width:160px;height:155px;top:75px}
+
+/* Preserve the original waffle cone aspect ratio; fit the scoops to its opening. */
+.build-vessel.cone{width:155px;height:165px;top:235px;object-fit:contain}
+.build-vessel.cone.vessel-back{clip-path:none}
+.build-vessel.cone.vessel-front{clip-path:polygon(0 12%,10% 20%,25% 26%,50% 29%,75% 26%,90% 20%,100% 12%,100% 100%,0 100%)}
+.composition:has(.build-vessel.cone) .build-scoop{width:120px;height:120px;top:165px}
+.composition:has(.build-vessel.cone) .build-scoop[data-slot="1"]{width:115px;height:115px;top:90px}
+.composition:has(.build-vessel.cone) .build-toppings{width:105px;height:90px}
+.composition:has(.build-vessel.cone) .build-toppings img{width:18px;height:18px}
+.composition:has(.build-vessel.cone) .build-sauce{width:120px;height:85px}
+.composition:has(.build-vessel.cone) .build-cream{width:95px;height:105px;top:calc(var(--layer-top) - 65px)}

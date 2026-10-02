@@ -36,9 +36,9 @@ function createLayer(group,index,slot){
  const layer=document.createElement('span');
  layer.dataset.layer=group===0?`scoop-${slot}`:`${group}-${index}`;
  layer.className=group===0?'build-scoop':group===1?'build-toppings':index===2?'build-cream':'build-sauce';
- const anchor=order.flavors.length>1?90:order.flavors.length===1?190:265;
+ const anchor=order.vessel==='cone'?(order.flavors.length>1?100:order.flavors.length===1?175:265):(order.flavors.length>1?90:order.flavors.length===1?190:265);
  layer.style.setProperty('--layer-top',`${anchor}px`);
- if(group===1&&index===10&&order.drizzles.includes(2))layer.style.top=`${anchor-103}px`;
+ if(group===1&&index===10&&order.drizzles.includes(2))layer.style.top=`${anchor-(order.vessel==='cone'?73:103)}px`;
  if(group===0){layer.dataset.slot=String(slot);layer.append(layerImage(layerPath(group,index)));}
  else if(group===1){
   const count=index===10?1:index===0?7:6;
