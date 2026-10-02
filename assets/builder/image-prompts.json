@@ -1,0 +1,143 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "asset": "cup.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Empty ice cream paper cup, pastel strawberry pink with subtle cream vertical stripes, realistic curled white rim, slightly tapered sides, front view at a very slightly elevated angle, fully visible, no ice cream. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-25a775c1-f70f-48c7-861c-5aca8dbd8827.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "cone.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Empty golden waffle ice cream cone, realistic crisp waffle grid, circular open rim on top, tapered to a fine point below, front view, fully visible, no ice cream. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-152cb401-9ce7-486a-a8dc-5876aeeeacab.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "scoop-vanilla.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One naturally round hand-scooped vanilla ice cream ball. Real spherical scoop with gently rough frozen texture and irregular scalloped lower edge, front view. No container, no tray, no cone. No toppings or sauce. For strawberry cheesecake use pale cream with pink swirls; pistachio pale green; mango golden yellow. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-1d640c88-b191-4a27-8705-843b2497ca09.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "scoop-chocolate.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One naturally round hand-scooped chocolate ice cream ball. Real spherical scoop with gently rough frozen texture and irregular scalloped lower edge, front view. No container, no tray, no cone. No toppings or sauce. For strawberry cheesecake use pale cream with pink swirls; pistachio pale green; mango golden yellow. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-1f53c3b9-d49d-4b31-bf7a-12249a9ae42d.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "scoop-coffee.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One naturally round hand-scooped coffee ice cream ball. Real spherical scoop with gently rough frozen texture and irregular scalloped lower edge, front view. No container, no tray, no cone. No toppings or sauce. For strawberry cheesecake use pale cream with pink swirls; pistachio pale green; mango golden yellow. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-170eade0-c03b-4c71-adfd-563eaec01edb.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "scoop-pistachio.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One naturally round hand-scooped pistachio ice cream ball. Real spherical scoop with gently rough frozen texture and irregular scalloped lower edge, front view. No container, no tray, no cone. No toppings or sauce. For strawberry cheesecake use pale cream with pink swirls; pistachio pale green; mango golden yellow. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-e1b78867-4c28-4029-9517-60e0036d605a.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "scoop-strawberry-cheesecake.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One naturally round hand-scooped strawberry cheesecake ice cream ball. Real spherical scoop with gently rough frozen texture and irregular scalloped lower edge, front view. No container, no tray, no cone. No toppings or sauce. For strawberry cheesecake use pale cream with pink swirls; pistachio pale green; mango golden yellow. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-02093cab-72ab-4857-9463-06b92c3e5025.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "scoop-mango.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One naturally round hand-scooped mango ice cream ball. Real spherical scoop with gently rough frozen texture and irregular scalloped lower edge, front view. No container, no tray, no cone. No toppings or sauce. For strawberry cheesecake use pale cream with pink swirls; pistachio pale green; mango golden yellow. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-979f230a-5e6c-454e-8fe3-71d535e4746d.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "sauce-fudge.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Isolated glossy dark chocolate fudge sauce cap draped over an invisible round ice cream scoop. Front view. Wide domed rounded sauce top and 4 irregular tapering hanging drips down sides, rich shiny highlights, realistic viscosity, like thick hot fudge poured over ice cream. Render ONLY sauce, empty transparent space between drips, no ice cream or cup underneath. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-69185185-4824-46f3-8ed1-a5fd48dc27dc.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "sauce-peanut.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Isolated glossy golden peanut butter sauce cap draped over an invisible round ice cream scoop. Front view. Wide domed rounded sauce top and 4 irregular tapering hanging drips down sides, silky reflective highlights, realistic viscosity. Render ONLY sauce, empty transparent space between drips, no ice cream or cup underneath. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-614a517d-3a17-460e-8b61-55f442f53a6a.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "cream.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One isolated beautifully piped white whipped cream spiral peak, realistic soft airy cream texture and fine ridges, glossy subtle highlights, front view, fully visible. No topping, cherry, container, ice cream or tray. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-8598b00e-723e-4cfb-b365-a04b353baae1.png",
+      "maxDimension": 512
+    },
+    {
+      "asset": "rainbow-sprinkles.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. A small sparse cluster of 8 colorful individual rainbow sugar sprinkles, tiny rod shapes, no pile or container. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-2e44772e-3935-496f-af25-87eda8a5e510.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "oreo-crumbs.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Three small realistic irregular dark chocolate sandwich cookie crumbs with a little white cream visible, isolated little cluster, no whole cookies. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-81cc8bfd-2c60-47b1-8d6a-4cde44aafd2f.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "gummy-bears.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One translucent red-orange gummy bear candy, recognizable bear, small soft highlights. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-eb9691ce-c516-4038-bc8c-9fb455a41066.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "strawberries.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One fresh red strawberry slice, seeds and white core, small realistic fruit piece. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-dfb0f038-656f-47d7-b7b0-1ef67d6e0870.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "blueberries.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Two fresh dusty blue blueberries, realistic bloom and crowns. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-1b8f1ca0-ae41-4fce-b46e-6040efc7b675.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "mango.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Two fresh golden orange mango cubes, juicy natural highlights. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-1a7377d7-f32e-418b-9027-cfda0964f3c8.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "peanut-butter-cups.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One small broken piece of a chocolate peanut butter cup, ridged dark chocolate shell and visible golden peanut butter filling. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-2abbccdd-dd16-4de5-8e93-3cbd10563719.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "marshmallows.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Two white fluffy mini marshmallows, natural matte surfaces. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-7bec76fc-09df-4937-8e51-fe2ffd2df341.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "graham-crackers.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Two small broken golden graham cracker pieces, perforated crisp realistic surfaces. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-1c6ea008-4349-4b5f-9d8b-fd41a7a7a7ab.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "brownie-pieces.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One small fudgy brownie cube, moist rich chocolate crumb texture. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-54c28188-f947-475f-a044-76bc0da31334.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "cherry.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. One shiny red maraschino cherry with a short curved green stem. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-897d882a-e501-4ad8-ab1f-36c441a7cd62.png",
+      "maxDimension": 256
+    },
+    {
+      "asset": "mochi-bites.png",
+      "prompt": "Use case: product-mockup. Asset type: isolated ingredient layer for a realistic ice cream builder. Two little pastel pink and white mochi cubes dusted with starch. High quality realistic food/product photography, soft warm studio lighting. Center object and fill approximately 85% of image, entire object visible, transparent background. No trays, bowls, background, labels, text, logos or watermark. Assets need to composite cleanly onto ice cream, not look like flat geometric shapes. Return saved local image file path.",
+      "source": "/Users/irishao/.codex/generated_images/01a0fdc8-7fe8-73a2-a42d-64d14832b9ac/exec-702e88bd-84ea-4ffe-9bda-6d4859118ad1.png",
+      "maxDimension": 256
+    }
+  ]
+}

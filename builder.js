@@ -8,10 +8,10 @@ const ingredientGroups = [
 const stationNames=['Flavors','Toppings','Drizzles'];
 const titles=['Pick your scoops.','A sprinkle of personality.','The finishing touch.'];
 const descriptions=['Up to two scoops. Your favorite flavor can make a repeat appearance.','Up to three different toppings. A little crunch, a little color.','Any drizzles you like, once each. Finish whenever you’re happy.'];
-const imagePath = (group,index) => `assets/shop/${ingredientGroups[group][index].asset}.${group===2?'png':'jpg'}`;
+const imagePath = (group,index) => group===1 ? `assets/builder/${ingredientGroups[group][index].asset}.png` : `assets/shop/${ingredientGroups[group][index].asset}.${group===2?'png':'jpg'}`;
+const layerPath = (group,index) => group===0 ? `assets/builder/scoop-${['vanilla','chocolate','coffee','pistachio','strawberry-cheesecake','mango'][index]}.png` : group===1 ? imagePath(group,index) : `assets/builder/${['sauce-fudge','sauce-peanut','cream'][index]}.png`;
 let order={vessel:null,flavors:[],toppings:[],drizzles:[],history:[]};
 let station=0,pending=null,drag=null,suppressClick=false;
-const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function allowed(group,index){
  if(!order.vessel)return false;
  if(group===0)return order.flavors.length<2;
@@ -29,25 +29,46 @@ function renderStation(){
  select('#undo').disabled=!order.history.length;
  select('#drop-zone').setAttribute('aria-label',pending?`Add ${ingredientGroups[pending.group][pending.index].name} to your ${order.vessel}`:`Your ${order.vessel}. Select an ingredient first.`);
 }
-function sundaeMarkup(){
- let html=`<span class="sundae-vessel ${order.vessel==='cone'?'cone-art':'cup-art'}"></span>`;
- order.flavors.forEach(index=>{html+=`<span class="scoop" style="background-image:url('${imagePath(0,index)}')"></span>`});
- // Percent positions keep decoration aligned with the miniature mobile preview.
- const top=order.flavors.length>1?8:order.flavors.length===1?35:54;
- order.toppings.forEach((index,batch)=>{
-  for(let piece=0;piece<14;piece++){
-   const x=28+(piece*17+batch*11)%44,y=top+(piece*7+batch*3)%22;
-   const rainbow=['#ee809c','#eac460','#8fb6ce','#a4c484','#bda2d0'];
-   html+=`<i class="topping-piece ${index===0?'sprinkle':''}" style="left:${x}%;top:${y}%;${index===0?`background:${rainbow[piece%5]}`:`background-image:url('${imagePath(1,index)}')`};rotate:${piece*29}deg;animation-delay:${piece*12}ms"></i>`;
-  }
- });
- order.drizzles.forEach((index,i)=>{
-  if(index===2){html+=`<span class="cream-swirl" style="top:${Math.max(0,top-5)}%"></span>`;return;}
-  html+=`<svg class="sauce" style="top:${top+4+i*4}%" viewBox="0 0 140 80" aria-hidden="true"><path d="M18 8Q120 4 121 17T20 29Q16 36 120 42T22 55Q18 61 114 69" fill="none" stroke="${ingredientGroups[2][index].color}" stroke-width="7" stroke-linecap="round" pathLength="1">${reduceMotion?'':'<animate attributeName="stroke-dasharray" values="0 1;1 0" dur="0.55s" fill="freeze"/>'}</path></svg>`;
- });
- return html;
+function layerImage(path){
+ const image=document.createElement('img');image.addEventListener('load',()=>image.classList.add('ingredient-ready'),{once:true});image.src=path;image.alt='';image.draggable=false;return image;
 }
-function renderOrder(){select('#sundae').innerHTML=sundaeMarkup();renderStation();}
+function createLayer(group,index,slot){
+ const layer=document.createElement('span');
+ layer.dataset.layer=group===0?`scoop-${slot}`:`${group}-${index}`;
+ layer.className=group===0?'build-scoop':group===1?'build-toppings':index===2?'build-cream':'build-sauce';
+ const anchor=order.flavors.length>1?65:order.flavors.length===1?165:245;
+ layer.style.setProperty('--layer-top',`${anchor}px`);
+ if(group===1&&index===10&&order.drizzles.includes(2))layer.style.top=`${anchor-48}px`;
+ if(group===0){layer.dataset.slot=String(slot);layer.append(layerImage(layerPath(group,index)));}
+ else if(group===1){
+  const count=index===10?1:index===0?7:6;
+  for(let piece=0;piece<count;piece++){
+   const image=layerImage(layerPath(group,index));
+   // Stable positions: adding another ingredient never reshuffles existing pieces.
+   image.style.left=`${8+(piece*23+index*13)%73}%`;
+   image.style.top=`${8+(piece*17+index*11)%58}%`;
+   image.style.rotate=`${(piece*47+index*9)%80-40}deg`;
+   image.style.animationDelay=`${piece*35}ms`;
+   layer.append(image);
+  }
+ } else {layer.append(layerImage(layerPath(group,index)));}
+ return layer;
+}
+function syncComposition(){
+ let root=select('#sundae').querySelector('.composition');
+ if(!root){
+  root=document.createElement('span');root.className='composition';
+  const vessel=layerImage(`assets/builder/${order.vessel}.png`);vessel.className=`build-vessel ${order.vessel}`;
+  root.append(vessel);select('#sundae').append(root);
+ }
+ const desired=new Set();
+ ['flavors','toppings','drizzles'].forEach((key,group)=>order[key].forEach((index,slot)=>{
+  const id=group===0?`scoop-${slot}`:`${group}-${index}`;desired.add(id);
+  if(!Array.from(root.children).some(child=>child.dataset.layer===id))root.append(createLayer(group,index,slot));
+ }));
+ Array.from(root.children).forEach(child=>{if(child.dataset.layer&&!desired.has(child.dataset.layer))child.remove()});
+}
+function renderOrder(){syncComposition();renderStation();}
 function addIngredient(group,index){
  if(!allowed(group,index)){announce('That ingredient is already added, or you’ve reached the limit.');return false;}
  const key=['flavors','toppings','drizzles'][group];order[key].push(index);order.history.push({group,index});pending=null;
@@ -56,7 +77,7 @@ function addIngredient(group,index){
 }
 function switchStation(next){station=(next+3)%3;pending=null;renderStation();announce(`Choose ${stationNames[station].toLowerCase()}, or finish your creation.`);}
 function chooseVessel(vessel){order.vessel=vessel;station=0;pending=null;select('#vessel-choice').hidden=true;select('#workbench').hidden=false;renderOrder();announce(`Drag a flavor to your ${vessel}, or tap a flavor and then your ${vessel}.`);select('#builder-title').focus({preventScroll:true});}
-function resetOrder(){cleanupDrag();order={vessel:null,flavors:[],toppings:[],drizzles:[],history:[]};pending=null;station=0;select('#workbench').hidden=true;select('#finished').hidden=true;select('#vessel-choice').hidden=false;select('#builder-title').textContent='Cup or cone?';select('#builder-description').textContent='Every great scoop starts somewhere. Choose your favorite.';select('#builder-title').focus({preventScroll:true});window.scrollTo(0,0);}
+function resetOrder(){cleanupDrag();order={vessel:null,flavors:[],toppings:[],drizzles:[],history:[]};pending=null;station=0;select('#sundae').replaceChildren();select('#finished-sundae').replaceChildren();select('#workbench').hidden=true;select('#finished').hidden=true;select('#vessel-choice').hidden=false;select('#builder-title').textContent='Cup or cone?';select('#builder-description').textContent='Every great scoop starts somewhere. Choose your favorite.';select('#builder-title').focus({preventScroll:true});window.scrollTo(0,0);}
 function cleanupDrag(){if(drag){try{drag.button.releasePointerCapture(drag.id)}catch{}}drag=null;select('#drag-ghost').hidden=true;document.body.classList.remove('is-dragging');select('#drop-zone').classList.remove('drop-active');}
 function overTarget(x,y){const r=select('#drop-zone').getBoundingClientRect();return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;}
 function moveGhost(event){const ghost=select('#drag-ghost');ghost.style.transform=`translate(${event.clientX-25}px,${event.clientY-25}px)`;select('#drop-zone').classList.toggle('drop-active',overTarget(event.clientX,event.clientY));}
@@ -69,7 +90,7 @@ select('#builder-items').addEventListener('pointerdown',event=>{
 window.addEventListener('pointermove',event=>{
  if(!drag||event.pointerId!==drag.id)return;
  if(!drag.started&&Math.hypot(event.clientX-drag.x,event.clientY-drag.y)<7)return;
- if(!drag.started){drag.started=true;drag.button.setPointerCapture(event.pointerId);const ghost=select('#drag-ghost');ghost.className=drag.group===0?'scoop-tool':'';ghost.innerHTML=`<img src="${imagePath(drag.group,drag.index)}" alt="">`;ghost.hidden=false;document.body.classList.add('is-dragging');}
+ if(!drag.started){drag.started=true;drag.button.setPointerCapture(event.pointerId);const ghost=select('#drag-ghost');ghost.className=drag.group===0?'scoop-tool':'';ghost.replaceChildren(layerImage(drag.group===2?imagePath(drag.group,drag.index):layerPath(drag.group,drag.index)));ghost.hidden=false;document.body.classList.add('is-dragging');}
  event.preventDefault();moveGhost(event);
 },{passive:false});
 window.addEventListener('pointerup',event=>{
@@ -93,7 +114,7 @@ select('#undo').addEventListener('click',()=>{const last=order.history.pop();if(
 select('#change-vessel').addEventListener('click',resetOrder);select('#restart').addEventListener('click',resetOrder);
 select('#finish').addEventListener('click',()=>{
  cleanupDrag();pending=null;select('#workbench').hidden=true;select('#finished').hidden=false;select('#builder-title').textContent='Made by you.';select('#builder-description').textContent='A little something sweet, exactly your way.';
- select('#finished-sundae').innerHTML=`<div class="sundae-art">${sundaeMarkup()}</div>`;
+ select('#finished-sundae').replaceChildren(select('#sundae').querySelector('.composition').cloneNode(true));
  const lines=[['Served in',order.vessel==='cup'?'A little cup':'A waffle cone']];
  ['flavors','toppings','drizzles'].forEach((key,group)=>{if(!order[key].length)lines.push([stationNames[group],'None']);else order[key].forEach(index=>lines.push([group===0?'1 scoop':group===1?'Topping':'Drizzle',ingredientGroups[group][index].name]));});
  select('#receipt-ingredients').innerHTML=lines.map(([label,name])=>`<div class="receipt-line"><span>${escapeText(label)}</span><strong>${escapeText(name)}</strong></div>`).join('');
