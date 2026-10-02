@@ -45,18 +45,17 @@ footer{align-items:flex-end}
 .toppings .item-name{font-size:9px;min-height:22px;line-height:1.3;margin-top:5px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 .welcome-inner{padding-top:70px}
-.hanging-open{position:relative;margin:0 auto 12px;width:150px;padding:10px 20px;background:#dbeadf;border:3px solid #8da695;border-radius:8px;box-shadow:0 5px 0 #bdccbb;color:#577461;font:bold 25px Georgia;letter-spacing:5px;transform-origin:50% -55px}
-.hanging-open:before,.hanging-open:after{content:'';position:absolute;bottom:calc(100% + 3px);width:2px;height:55px;background:#aa9380;left:22px}
-.hanging-open:after{left:auto;right:22px}
-.is-entering .hanging-open{animation:open-sign-arrive .9s ease-out both}
+
+
+
 .intro{max-width:560px;min-height:58px;margin:0 auto 26px;padding:0 8px}
 .is-typing:after{content:'|';color:var(--red);animation:typing-cursor .7s step-end infinite}
 body:has(#welcome:not([hidden])) footer>span{visibility:hidden}
-@keyframes open-sign-arrive{0%{opacity:0;transform:translateY(-155px) rotate(-8deg)}60%{opacity:1;transform:translateY(6px) rotate(5deg)}80%{transform:translateY(-2px) rotate(-3deg)}100%{opacity:1;transform:translateY(0) rotate(0)}}
+
 @keyframes typing-cursor{50%{opacity:0}}
 @media(max-width:800px){#items.flavors{min-height:380px}.flavors .food-art{height:150px}#items.toppings{grid-template-columns:repeat(7,minmax(84px,1fr));min-height:380px}.welcome-inner{padding-top:70px}}
-@media(max-width:480px){#items.flavors{min-height:380px}.flavors .food-art{height:130px}#items.toppings{grid-template-columns:repeat(7,minmax(84px,1fr));min-height:380px}.welcome-inner{padding-top:70px}.hanging-open{width:130px;font-size:22px}.intro{min-height:76px}}
-@media(prefers-reduced-motion:reduce){.is-entering .hanging-open,.is-typing:after{animation:none}}
+@media(max-width:480px){#items.flavors{min-height:380px}.flavors .food-art{height:130px}#items.toppings{grid-template-columns:repeat(7,minmax(84px,1fr));min-height:380px}.welcome-inner{padding-top:70px}.intro{min-height:76px}}
+@media(prefers-reduced-motion:reduce){.is-entering .hanging-logo,.is-typing:after{animation:none}}
 
 /* Iris belongs to the landing scene, beside the counter. */
 #welcome{position:relative}
@@ -69,3 +68,11 @@ footer{align-items:center}
 .shopkeeper-photo{display:block;width:min(100%,280px);height:auto;border-radius:16px;margin:0 auto 20px;border:4px solid #f4ddd0}
 @media(max-width:900px){#welcome .welcome-inner{padding-left:20px;padding-right:20px;padding-bottom:100px}#welcome #about{right:4%;bottom:25px}#welcome #about .landing-shopkeeper{width:135px}}
 @media(max-width:480px){#welcome .welcome-inner{padding-bottom:165px}#welcome #about{bottom:15px;right:6%}#welcome #about .landing-shopkeeper{width:125px}}
+
+/* The shop logo is the hanging sign. */
+.hanging-logo{position:relative;transform-origin:50% -30px;perspective:700px}
+.hanging-logo:before,.hanging-logo:after{content:'';position:absolute;z-index:-1;bottom:70%;width:2px;height:110px;background:#b99a81;left:28%}
+.hanging-logo:after{left:auto;right:28%}
+.is-entering .hanging-logo{animation:logo-sign-arrive 1.3s cubic-bezier(.22,.65,.3,1) both}
+@keyframes logo-sign-arrive{0%{opacity:0;transform:translateY(-230px) rotate(-18deg) rotateY(-85deg)}45%{opacity:1;transform:translateY(10px) rotate(10deg) rotateY(25deg)}68%{transform:translateY(-5px) rotate(-6deg) rotateY(-12deg)}85%{transform:translateY(2px) rotate(3deg) rotateY(5deg)}100%{opacity:1;transform:translateY(0) rotate(0) rotateY(0)}}
+@media(prefers-reduced-motion:reduce){.is-entering .hanging-logo{animation:none}}

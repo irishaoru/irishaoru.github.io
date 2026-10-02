@@ -65,7 +65,7 @@ function startGreeting() {
  output.classList.remove('is-typing');
  if (motionPreference.matches) { output.textContent = greeting; return; }
  output.textContent = '';
- // Restart the hanging sign when returning from the shop.
+ // Restart the hanging logo sign when returning from the shop.
  void $('#welcome').offsetWidth;
  $('#welcome').classList.add('is-entering');
  let position = 0;
@@ -75,7 +75,7 @@ function startGreeting() {
   if (position < greeting.length) greetingTimer = setTimeout(typeNext, 38);
   else output.classList.remove('is-typing');
  }
- greetingTimer = setTimeout(typeNext, 900);
+ greetingTimer = setTimeout(typeNext, 1300);
 }
 motionPreference.addEventListener('change', () => {
  if (!$('#welcome').hidden) startGreeting();
