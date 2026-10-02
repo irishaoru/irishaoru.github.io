@@ -77,3 +77,16 @@
 .composition:has(.build-vessel.cone) .build-toppings img{width:18px;height:18px}
 .composition:has(.build-vessel.cone) .build-sauce{width:120px;height:85px}
 .composition:has(.build-vessel.cone) .build-cream{width:95px;height:105px;top:calc(var(--layer-top) - 65px)}
+
+/* Let the ingredient counter fill the same row height as the creation panel. */
+@media(min-width:651px){
+ .builder-layout{align-items:stretch}
+ .ingredient-side{display:flex;flex-direction:column;min-height:0}
+ .builder-page .ingredient-side .scene{flex:1;display:flex;align-items:stretch}
+ .ingredient-side .case{display:flex;flex-direction:column;width:100%}
+ #builder-items{flex:1;align-content:stretch;grid-auto-rows:1fr}
+ #builder-items .ingredient-button{display:flex;flex-direction:column;min-height:0}
+ #builder-items.flavors .food-art{flex:1;height:clamp(100px,13vw,180px);min-height:100px}
+ #builder-items .flavor{flex:none}
+ .order-side{align-self:stretch}
+}
