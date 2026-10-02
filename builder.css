@@ -41,3 +41,18 @@
 .build-vessel.vessel-front{z-index:4;filter:none;clip-path:polygon(0 18%,5% 24%,15% 29%,30% 32%,50% 33%,70% 32%,85% 29%,95% 24%,100% 18%,100% 100%,0 100%)}
 .build-vessel.vessel-front.cone{clip-path:polygon(0 12%,10% 20%,25% 26%,50% 29%,75% 26%,90% 20%,100% 12%,100% 100%,0 100%)}
 .build-cream{width:120px;height:130px;top:calc(var(--layer-top) - 80px)}
+
+/* Seat the scoops deeper in the opening, with the front rim covering their base. */
+.build-scoop{top:170px;width:180px;height:165px}
+.build-scoop[data-slot="1"]{top:75px;width:175px;height:160px}
+.build-vessel.cup{width:180px;height:150px;top:255px}
+.build-vessel.cone{top:235px;height:165px;width:155px}
+.build-cream{width:140px;height:145px;top:calc(var(--layer-top) - 95px)}
+
+.build-toppings{width:160px;height:130px}
+.build-toppings img{width:23px;height:23px}
+
+/* Remove the empty interior from both cup images; retain only the paper body. */
+.build-vessel.cup.vessel-back,.build-vessel.cup.vessel-front{clip-path:inset(34% 0 0 0)}
+.cup-front-lip{position:absolute;left:50%;translate:-50% 0;top:255px;width:180px;height:150px;z-index:5;pointer-events:none}
+.cup-front-lip svg{display:block;width:100%;height:100%;overflow:visible}

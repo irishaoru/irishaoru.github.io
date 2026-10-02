@@ -36,18 +36,22 @@ function createLayer(group,index,slot){
  const layer=document.createElement('span');
  layer.dataset.layer=group===0?`scoop-${slot}`:`${group}-${index}`;
  layer.className=group===0?'build-scoop':group===1?'build-toppings':index===2?'build-cream':'build-sauce';
- const anchor=order.flavors.length>1?65:order.flavors.length===1?165:245;
+ const anchor=order.flavors.length>1?90:order.flavors.length===1?190:265;
  layer.style.setProperty('--layer-top',`${anchor}px`);
- if(group===1&&index===10&&order.drizzles.includes(2))layer.style.top=`${anchor-88}px`;
+ if(group===1&&index===10&&order.drizzles.includes(2))layer.style.top=`${anchor-103}px`;
  if(group===0){layer.dataset.slot=String(slot);layer.append(layerImage(layerPath(group,index)));}
  else if(group===1){
   const count=index===10?1:index===0?7:6;
   for(let piece=0;piece<count;piece++){
    const image=layerImage(layerPath(group,index));
    // Stable positions: adding another ingredient never reshuffles existing pieces.
-   image.style.left=`${8+(piece*23+index*13)%73}%`;
-   image.style.top=`${8+(piece*17+index*11)%58}%`;
-   image.style.rotate=`${(piece*47+index*9)%80-40}deg`;
+   // Use independent, seeded coordinates within an ellipse; preserve each placement.
+   const random=seed=>{const value=Math.sin(seed*127.1+index*311.7)*43758.5453;return value-Math.floor(value)};
+   const angle=(piece*2.399963+random(19)*Math.PI*2);
+   const radius=Math.sqrt((piece+.5)/count);
+   image.style.left=`${44+Math.cos(angle)*radius*38}%`;
+   image.style.top=`${38+Math.sin(angle)*radius*34}%`;
+   image.style.rotate=`${random(piece+71)*50-25}deg`;
    image.style.animationDelay=`${piece*35}ms`;
    layer.append(image);
   }
@@ -60,7 +64,12 @@ function syncComposition(){
   root=document.createElement('span');root.className='composition';
   const vessel=layerImage(`assets/builder/${order.vessel}.png`);vessel.className=`build-vessel vessel-back ${order.vessel}`;
   const front=layerImage(`assets/builder/${order.vessel}.png`);front.className=`build-vessel vessel-front ${order.vessel}`;
-  root.append(vessel);root.append(front);select('#sundae').append(root);
+  root.append(vessel);root.append(front);
+  if(order.vessel==='cup'){
+   const lip=document.createElement('span');lip.className='cup-front-lip';
+   lip.innerHTML='<svg viewBox="0 0 180 150" aria-hidden="true"><defs><linearGradient id="cup-lip-shade" x2="0" y2="1"><stop stop-color="#fffdf3"/><stop offset="1" stop-color="#d9cbbb"/></linearGradient></defs><path d="M8 30 Q90 72 172 30" fill="none" stroke="#bda994" stroke-width="8" stroke-linecap="round"/><path d="M8 28 Q90 70 172 28" fill="none" stroke="url(#cup-lip-shade)" stroke-width="6" stroke-linecap="round"/></svg>';
+   root.append(lip);
+  }select('#sundae').append(root);
  }
  const desired=new Set();
  ['flavors','toppings','drizzles'].forEach((key,group)=>order[key].forEach((index,slot)=>{
