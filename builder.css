@@ -97,3 +97,61 @@
 .build-vessel.cone.vessel-front{display:none}
 .composition:has(.build-vessel.cone) .build-scoop{width:120px;height:120px;top:132px;z-index:3}
 .composition:has(.build-vessel.cone) .build-scoop[data-slot="1"]{width:115px;height:115px;top:52px;z-index:4}
+
+/* Compact builder: fit the workbench into the available screen height. */
+.builder-page{height:100svh;min-height:0;display:flex;flex-direction:column}
+.builder-page header{flex:none;padding-top:66px;padding-bottom:7px}
+.builder-page main{flex:1;min-height:0;display:flex;flex-direction:column}
+.builder-page .heading{flex:none;padding:5px 15px 10px}
+.builder-page .heading h1{font-size:clamp(25px,3vw,36px);margin:5px auto}
+.builder-page .heading .eyebrow{margin:5px 0}
+.builder-page .heading>p:last-child{margin:5px 0;font-size:12px}
+#workbench{flex:1;min-height:0}
+.builder-layout{height:100%;min-height:0;padding-bottom:12px;grid-template-columns:minmax(0,1fr) 245px}
+.ingredient-side{min-height:0;display:flex;flex-direction:column}
+.builder-page .ingredient-side .scene{flex:1;min-height:0;padding-top:20px;padding-bottom:20px}
+.ingredient-side .case{min-height:0}
+#builder-items,#builder-items.toppings{min-height:0;padding:10px;gap:8px}
+#builder-items.flavors .food-art{height:clamp(55px,13svh,115px);min-height:0;flex:0 1 auto}
+.builder-page .toppings .food-art{height:clamp(40px,10svh,80px)}
+.builder-page .drizzles .food-art{height:clamp(70px,24svh,155px)}
+.builder-page .case-front{padding:10px 14px}
+.builder-page .sections{margin:8px 0 0;gap:5px}
+.builder-page .sections button{padding:7px 10px}
+.builder-page .sections button:disabled{opacity:.4;cursor:not-allowed}
+.order-side{padding:10px;display:flex;flex-direction:column;min-height:0;justify-content:center}
+.order-side>.eyebrow{margin:5px 0 10px}
+#drop-zone{min-height:0;padding-bottom:7px}
+#sundae{width:210px;height:clamp(155px,43svh,324px)}
+#sundae>.composition{scale:1;transform:scale(.8);transform-origin:top center;margin-left:-25px}
+#builder-status{min-height:0;margin:8px 0;font-size:11px;line-height:1.4}
+.order-actions button{padding:8px 12px;font-size:11px}
+.restart-link{margin-top:8px}
+.vessel-choice{min-height:0;padding:10px 20px;gap:20px}
+.vessel-choice button{padding:15px;gap:8px}
+.vessel-photo{height:clamp(85px,25svh,145px)}
+#finished{flex:1;min-height:0;overflow:auto}
+@media(max-width:650px){
+ .builder-layout{padding:0 10px 8px;gap:8px}
+ .builder-page .heading h1{font-size:25px}
+ .builder-page .heading>p:last-child{font-size:10px}
+ .order-side{position:static;flex:none;display:grid;grid-template-columns:110px 1fr;padding:6px;gap:3px}
+ #sundae{width:105px;height:162px}
+ #sundae>.composition{transform:scale(.4);transform-origin:top left;margin:0}
+ #drop-zone{grid-row:1/5}
+ .builder-page .ingredient-side .scene{padding:16px 6% 14px}
+ #builder-items.flavors .food-art{height:clamp(35px,7svh,65px)}
+ .builder-page .toppings .food-art{height:clamp(30px,6svh,50px)}
+ .builder-page .drizzles .food-art{height:clamp(60px,15svh,110px)}
+ .builder-page .flavor{font-size:9px;min-height:25px;padding:4px 2px}
+ .builder-page .case-front{padding:7px 10px}
+ .builder-page .sections{margin-top:5px}
+}
+@media(max-height:560px) and (min-width:651px){
+ .builder-page header{padding-top:52px}.builder-page .heading{padding-bottom:4px}
+ .builder-page .heading h1{font-size:25px}.builder-page .heading .eyebrow{display:none}
+ #sundae{height:180px;width:120px}#sundae>.composition{transform:scale(.45);transform-origin:top left;margin:0}
+ .builder-layout{grid-template-columns:minmax(0,1fr) 200px}.order-side>.eyebrow{margin:0 0 5px}
+ #drop-zone{display:flex;align-items:center;justify-content:center}#drop-prompt{max-width:55px}
+}
+@media(min-width:651px) and (min-height:561px) and (max-height:750px){#sundae{width:160px;height:240px}#sundae>.composition{transform:scale(.6);transform-origin:top left;margin:0}}

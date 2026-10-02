@@ -15,6 +15,7 @@ let station=0,pending=null,drag=null,suppressClick=false;
 function allowed(group,index){
  if(!order.vessel)return false;
  if(group===0)return order.flavors.length<2;
+ if(!order.flavors.length)return false;
  const chosen=group===1?order.toppings:order.drizzles;
  return (group!==1||chosen.length<3)&&!chosen.includes(index);
 }
@@ -25,7 +26,7 @@ function renderStation(){
  select('#builder-count').textContent=countText();
  const container=select('#builder-items');container.className=stationNames[station].toLowerCase();
  container.innerHTML=ingredientGroups[station].map((item,i)=>`<button class="treat ingredient-button" data-ingredient="${i}" aria-label="Select ${escapeText(item.name)}" aria-pressed="${pending?.group===station&&pending.index===i}" ${allowed(station,i)?'':'disabled'}><img class="food-art" src="${imagePath(station,i)}" alt="" draggable="false" width="512" height="512"><span class="flavor">${escapeText(item.name)}</span></button>`).join('');
- document.querySelectorAll('[data-station]').forEach(button=>{if(Number(button.dataset.station)===station)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
+ document.querySelectorAll('[data-station]').forEach(button=>{button.disabled=Number(button.dataset.station)>0&&!order.flavors.length;if(Number(button.dataset.station)===station)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
  select('#undo').disabled=!order.history.length;
  select('#drop-zone').setAttribute('aria-label',pending?`Add ${ingredientGroups[pending.group][pending.index].name} to your ${order.vessel}`:`Your ${order.vessel}. Select an ingredient first.`);
 }
@@ -85,7 +86,7 @@ function addIngredient(group,index){
  renderOrder();announce(`${ingredientGroups[group][index].name} added to your ${order.vessel}. ${group===0?`${order.flavors.length} of 2 scoops.`:group===1?`${order.toppings.length} of 3 toppings.`:'Looking sweet!'}`);
  return true;
 }
-function switchStation(next){station=(next+3)%3;pending=null;renderStation();announce(`Choose ${stationNames[station].toLowerCase()}, or finish your creation.`);}
+function switchStation(next){const target=(next+3)%3;if(target!==0&&!order.flavors.length){announce('Add at least one scoop before choosing toppings or drizzles.');return;}station=target;pending=null;renderStation();announce(`Choose ${stationNames[station].toLowerCase()}, or finish your creation.`);}
 function chooseVessel(vessel){order.vessel=vessel;station=0;pending=null;select('#vessel-choice').hidden=true;select('#workbench').hidden=false;renderOrder();announce(`Drag a flavor to your ${vessel}, or tap a flavor and then your ${vessel}.`);select('#builder-title').focus({preventScroll:true});}
 function resetOrder(){cleanupDrag();order={vessel:null,flavors:[],toppings:[],drizzles:[],history:[]};pending=null;station=0;select('#sundae').replaceChildren();select('#finished-sundae').replaceChildren();select('#workbench').hidden=true;select('#finished').hidden=true;select('#vessel-choice').hidden=false;select('#builder-title').textContent='Cup or cone?';select('#builder-description').textContent='Every great scoop starts somewhere. Choose your favorite.';select('#builder-title').focus({preventScroll:true});window.scrollTo(0,0);}
 function cleanupDrag(){if(drag){try{drag.button.releasePointerCapture(drag.id)}catch{}}drag=null;select('#drag-ghost').hidden=true;document.body.classList.remove('is-dragging');select('#drop-zone').classList.remove('drop-active');}
@@ -120,7 +121,7 @@ select('#drop-zone').addEventListener('click',()=>{if(pending)addIngredient(pend
 document.querySelectorAll('[data-vessel]').forEach(button=>button.addEventListener('click',()=>chooseVessel(button.dataset.vessel)));
 document.querySelectorAll('[data-station]').forEach(button=>button.addEventListener('click',()=>switchStation(Number(button.dataset.station))));
 select('#builder-previous').addEventListener('click',()=>switchStation(station-1));select('#builder-next').addEventListener('click',()=>switchStation(station+1));
-select('#undo').addEventListener('click',()=>{const last=order.history.pop();if(!last)return;order[['flavors','toppings','drizzles'][last.group]].pop();pending=null;renderOrder();announce('Last ingredient removed.');});
+select('#undo').addEventListener('click',()=>{const last=order.history.pop();if(!last)return;order[['flavors','toppings','drizzles'][last.group]].pop();pending=null;if(!order.flavors.length)station=0;renderOrder();announce('Last ingredient removed.');});
 select('#change-vessel').addEventListener('click',resetOrder);select('#restart').addEventListener('click',resetOrder);
 select('#finish').addEventListener('click',()=>{
  cleanupDrag();pending=null;select('#workbench').hidden=true;select('#finished').hidden=false;select('#builder-title').textContent='Made by you.';select('#builder-description').textContent='A little something sweet, exactly your way.';
