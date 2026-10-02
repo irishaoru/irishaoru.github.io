@@ -90,3 +90,10 @@
  #builder-items .flavor{flex:none}
  .order-side{align-self:stretch}
 }
+
+/* Seat the round scoop on the intact cone opening, not behind a cropped cone face. */
+.build-vessel.cone{width:125px;height:170px;top:225px;object-fit:contain}
+.build-vessel.cone.vessel-back{clip-path:none;z-index:1}
+.build-vessel.cone.vessel-front{display:none}
+.composition:has(.build-vessel.cone) .build-scoop{width:120px;height:120px;top:132px;z-index:3}
+.composition:has(.build-vessel.cone) .build-scoop[data-slot="1"]{width:115px;height:115px;top:52px;z-index:4}
