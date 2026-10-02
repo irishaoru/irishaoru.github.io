@@ -56,3 +56,13 @@
 .build-vessel.cup.vessel-back,.build-vessel.cup.vessel-front{clip-path:inset(34% 0 0 0)}
 .cup-front-lip{position:absolute;left:50%;translate:-50% 0;top:255px;width:180px;height:150px;z-index:5;pointer-events:none}
 .cup-front-lip svg{display:block;width:100%;height:100%;overflow:visible}
+
+/* Match the paper body to the lip instead of letterboxing it inside a narrow image. */
+.build-vessel.cup{width:205px;height:150px;object-fit:fill}
+.cup-front-lip{width:180px}
+/* Give the waffle opening enough width to support the scoop. */
+.build-vessel.cone{width:175px;height:180px;top:220px;object-fit:fill}
+.build-vessel.cone.vessel-back{clip-path:inset(27% 0 0)}
+.build-vessel.cone.vessel-front{clip-path:inset(27% 0 0)}
+.composition:has(.build-vessel.cone) .build-scoop{width:165px;height:160px;top:165px}
+.composition:has(.build-vessel.cone) .build-scoop[data-slot="1"]{width:160px;height:155px;top:75px}
